@@ -1,6 +1,6 @@
 try:
-    import chardet #looks like this does not work in Python 2
-catch ImportError: 
+    import chardet
+except ImportError:
     chardet = None
 if chardet:
     print('chardet found')
@@ -9,6 +9,6 @@ else:
 
 try:
     from lxml import etree
-catch ImportError:
+except ImportError:
     from xml.etree import ElementTree as etree
 print(dir(etree))
