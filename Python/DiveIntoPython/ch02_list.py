@@ -24,7 +24,17 @@ print(a_list)
 a_list.insert(0, 'first!')
 print(a_list)
 
-# searchin in a list code goes in here
+print("\n\n*** Searching for values in a list")
+a_list = ['a', 'b', 'new', 'mpilgrim', 'new']
+print(a_list.count('new'))
+print('new' in a_list)
+print(a_list.index('mpilgrim'))
+try:
+    print(a_list.index('xxxz'))
+except ValueError:
+    print(" ".join([str(a_list), 'does not contain', "'xxxz'"]))
+
+
 print("\n\n*** Removing items from list")
 a_list = ['a', 'b', 'new', 'mpilgrim', 'new']
 print(a_list)  # ['a', 'b', 'new', 'mpilgrim', 'new']
