@@ -7,3 +7,5 @@ import sys
 print(sys.path)
 sys.path.insert(0, 'some_dirctory_path_to_look_for_py_files')
 print(type(sys.path))
+import sys
+print(sys.version)
