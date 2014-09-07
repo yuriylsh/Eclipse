@@ -3,7 +3,7 @@ import os
 print('*** Current working directory')
 initialWorkingDir = os.getcwd()
 print(os.getcwd())
-os.chdir('C:\\Windows')
+os.chdir(os.path.expanduser('~'))
 print(os.getcwd())
 os.chdir('..')
 print(os.getcwd())
@@ -29,3 +29,9 @@ print(os.getcwd())
 import glob
 print(glob.glob('DiveIntoPython/*.pyc'))
 print(glob.glob('DiveIntoPython/*'))
+from customhelper import getScript
+metadata = os.stat(getScript("custom03.py"))
+print(metadata.st_mtime)
+import time
+print(time.localtime(metadata.st_mtime))
+print(os.path.realpath(getScript('custom03.py')))
