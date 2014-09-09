@@ -18,3 +18,8 @@ s = '100 BROAD ROAD APT. 3'
 print(s)
 print(re.sub(r'\bROAD$', 'RD.', s))
 print(re.sub(r'\bROAD\b', 'RD.', s))
+
+print('\n\n*** Even more regular expressions')
+compiled = re.compile('(\d{1,3})\s*(\d{1,3})')
+print(compiled.search('1234 923 33').groups())
+print(compiled.findall('1234 923 33'))
