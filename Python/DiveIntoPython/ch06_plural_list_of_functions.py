@@ -41,7 +41,7 @@ rules = ((match_sxz, apply_sxz),
          (match_default, apply_default))
 
 
-def pluaral(noun):
+def plural(noun):
     for matches_rule, apply_rule in rules:
         if(matches_rule(noun)):
             return apply_rule(noun)
