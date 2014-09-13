@@ -17,3 +17,12 @@ try:
         print(next(fib_iter))
 except StopIteration:
     pass
+
+print('\*\* Class variables')
+
+
+class SomeClass:
+    classVariable = 'initial value'
+
+    def __init__(self):
+        self.instanceVariable = "I'm instance variable"

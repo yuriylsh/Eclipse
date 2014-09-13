@@ -6,9 +6,10 @@ class LazyRules:
     '''Represents an iterator equivalent to the one
     created by generator in ch06_generators_plural.py'''
 
+    rules_filename = 'ch06_plural_file_of_patterns.txt'
+
     def __init__(self):
-        self.pattern_file = open(
-            'ch06_plural_file_of_patterns.txt', encoding='utf-8')
+        self.pattern_file = open(self.rules_filename, encoding='utf-8')
         self.cache = []
 
     def __iter__(self):
