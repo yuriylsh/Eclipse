@@ -17,6 +17,10 @@ def to_roman(n):
     '''convert integer to Roman numeral'''
     if n > 3999:
         raise OutOfRangeError('number out of range (must be less than 4000)')
+    elif n == 0:
+        raise OutOfRangeError('number out of range (must be non zero)')
+    elif n < 0:
+        raise OutOfRangeError('number out of range (must be non negative)')
 
     result = ''
     for numeral, integer in roman_numeral_map:
