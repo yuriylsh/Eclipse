@@ -9,7 +9,7 @@ print(fib.__doc__)
 print(Fib(100).max)
 print(Fib(200).max)
 
-print('\n\n*** How iterators a called')
+print('\n\n*** How iterators are called')
 fib = Fib(2000)
 fib_iter = iter(fib)
 try:
@@ -26,3 +26,17 @@ class SomeClass:
 
     def __init__(self):
         self.instanceVariable = "I'm instance variable"
+print('\n\n*** Difference between class variables and instance variables')
+sc1 = SomeClass()
+sc2 = SomeClass()
+print(sc1.classVariable)
+print(sc2.classVariable)
+
+sc1.classVariable = 'changed value'
+print('\n' + sc1.classVariable)
+print(sc2.classVariable)
+
+print('\n' + sc1.__class__.classVariable)
+sc1.__class__.classVariable = 'changing prototype'
+print(sc1.classVariable)
+print(sc2.classVariable)
