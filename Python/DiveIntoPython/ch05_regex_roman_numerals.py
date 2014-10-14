@@ -45,3 +45,5 @@ M{0,3} 				# thousands - 0 to 3 Ms
 $ 					# end of string
 '''
 print(re.search(pattern, 'MMMDCCCLXXXVIII', re.VERBOSE))
+
+roman_numeral_pattern = re.compile(pattern, re.VERBOSE)

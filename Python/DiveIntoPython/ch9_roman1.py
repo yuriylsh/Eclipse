@@ -15,8 +15,11 @@ roman_numeral_map = (('M', 1000),
 
 def to_roman(n):
     '''convert integer to Roman numeral'''
-    if n > 3999:
-        raise OutOfRangeError('number out of range (must be less than 4000)')
+    if not 0 < n < 4000:
+        raise OutOfRangeError('number out of range (must be 1...3999)')
+
+    if not isinstance(n, int):
+        raise NonIntegerError('non-integers can not be converted')
 
     result = ''
     for numeral, integer in roman_numeral_map:
@@ -25,6 +28,29 @@ def to_roman(n):
             n -= integer
     return result
 
+from ch05_regex_roman_numerals import roman_numeral_pattern
+
+
+def from_roman(s):
+    '''convert Roman numeral to integer'''
+    if not roman_numeral_pattern.search(s):
+        raise InvalidRomanNumeralError('Invalid Roman numeral: {0}'.format(s))
+    result = 0
+    index = 0
+    for numeral, integer in roman_numeral_map:
+        while s[index:index + len(numeral)] == numeral:
+            result += integer
+            index += len(numeral)
+    return result
+
 
 class OutOfRangeError(ValueError):
+    pass
+
+
+class NonIntegerError(ValueError):
+    pass
+
+
+class InvalidRomanNumeralError(ValueError):
     pass
