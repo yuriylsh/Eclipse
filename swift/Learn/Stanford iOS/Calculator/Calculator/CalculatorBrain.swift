@@ -26,12 +26,12 @@ class CalculatorBrain{
         knownOperations["√"] = Op.UnaryOperation("√", sqrt)
     }
     
-    func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Ops]){
-        
+    private func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]){
+        return (3, [])
     }
     
     func evaluate () -> Double?{
-        
+        return 3
     }
     
     func pushOperand(operand: Double){
