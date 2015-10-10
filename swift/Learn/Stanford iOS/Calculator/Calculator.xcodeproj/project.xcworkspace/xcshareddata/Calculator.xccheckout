@@ -5,20 +5,20 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>7D57CEBC-E49D-48AF-9AE3-2DF23075DD98</string>
+	<string>3FDE0324-979D-456A-ADFB-17BF45741751</string>
 	<key>IDESourceControlProjectName</key>
-	<string>book_chapter_01</string>
+	<string>Calculator</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>709138EE51C11ECAE21611292FF5FF5DC87FE9B1</key>
 		<string>https://bitbucket.org/yuriylsh/eclipse.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>swift/book_chapter_01.playground</string>
+	<string>swift/Learn/Stanford iOS/Calculator/Calculator.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>709138EE51C11ECAE21611292FF5FF5DC87FE9B1</key>
-		<string>../..</string>
+		<string>../../../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://bitbucket.org/yuriylsh/eclipse.git</string>
