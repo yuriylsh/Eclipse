@@ -1,0 +1,16 @@
+{
+  "name": "unittesting",
+  "version": "1.0.0",
+  "description": "the first attempt to unittest angular",
+  "main": "tests.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Yuriy Lyeshchenko",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-karma": "0.0.5",
+    "karma": "^0.13.11"
+  }
+}
