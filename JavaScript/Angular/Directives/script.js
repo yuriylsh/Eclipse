@@ -38,35 +38,42 @@
         };
     }
 
-    
+    function imodDatetimePickerAugmentorDirective($parse) {
+        var template = '<span class="input-group-btn" style="display: inline-block;"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>';
+        function augumentDatepickerWithButton(scope, element, attrs) {
+            var augmentation = angular.element(template);
+            augmentation.find('button').on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                scope.$apply(function () {
+                    $parse(attrs.isOpen).assign(scope, true);
+                });
+            });
+            element.after(augmentation);
+        }
+        function setupeKeyboardDateInput(scope, element, attrs) {
+            element.on('blur', function () {
+                var ticks = Date.parse(element.val()),
+                    scopePropertyToSet = $parse(attrs.ngModel);
+                scope.$apply(function () {
+                    scopePropertyToSet.assign(scope, ticks ? new Date(ticks) : null);
+                });
+            });
+        }
+        function linkFn(scope, element, attrs) {
+            augumentDatepickerWithButton(scope, element, attrs);
+            setupeKeyboardDateInput(scope, element, attrs);
+        }
+        return {
+            restrict: 'A',
+            require: 'datetimePicker',
+            link: linkFn
+        }
+    }
+
 
     angular
         .module('app', ['ui.bootstrap', 'ui.bootstrap.datetimepicker'])
         .controller('controller', ['$scope', controller])
-        .directive('imodDatetimePickerAugmentor', function ($parse) {
-            var template = '<span class="input-group-btn" style="display: inline-block;"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>';
-            function linkFn(scope, element, attrs) {
-                var augument = angular.element(template);
-                augument.find('button').on('click', function(evt) {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    scope.$apply(function() {
-                        $parse(attrs.isOpen).assign(scope, true);
-                    });
-                });
-                element.after(augument);
-                element.on('blur', function() {
-                    var ticks = Date.parse(element.val()),
-                        scopePropertyToSet = $parse(attrs.ngModel);
-                    scope.$apply(function () {
-                        scopePropertyToSet.assign(ticks ? new Date(ticks) : null);
-                    });
-                });
-            }
-            return {
-                restrict: 'A',
-                require: 'datetimePicker',
-                link: linkFn
-            }
-        });
+        .directive('imodDatetimePickerAugmentor', imodDatetimePickerAugmentorDirective);
 })();
