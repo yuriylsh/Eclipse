@@ -43,8 +43,8 @@
     angular
         .module('app', ['ui.bootstrap', 'ui.bootstrap.datetimepicker'])
         .controller('controller', ['$scope', controller])
-        .directive('imodDatetimePickerAugumentor', function($parse) {
-            var template = '<span class="input-group-btn" style="display: inline-block;"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>';
+        .directive('imodDatetimePickerAugmentor', function ($parse) {
+            var template = '<span class="input-group-btn" style="display: inline-block;"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>';
             function linkFn(scope, element, attrs) {
                 var augument = angular.element(template);
                 augument.find('button').on('click', function(evt) {
@@ -53,27 +53,20 @@
                     scope.$apply(function() {
                         $parse(attrs.isOpen).assign(scope, true);
                     });
-                })
+                });
                 element.after(augument);
-                element.on('blur', function() {                    
+                element.on('blur', function() {
                     var ticks = Date.parse(element.val()),
                         scopePropertyToSet = $parse(attrs.ngModel);
-                    if (ticks) {
-                        scope.$apply(function(){
-                            scopePropertyToSet.assign(new Date(ticks));
-                        });
-                    } else {
-                        scope.$apply(function(){
-                            scopePropertyToSet.assign(null);
-                        });
-                    }
-                    console.log(scope.startDate);
-                })
+                    scope.$apply(function () {
+                        scopePropertyToSet.assign(ticks ? new Date(ticks) : null);
+                    });
+                });
             }
             return {
                 restrict: 'A',
                 require: 'datetimePicker',
                 link: linkFn
             }
-        });    
+        });
 })();
