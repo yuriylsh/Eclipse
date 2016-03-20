@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html ng-app='app'>
     <head>
         <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -12,13 +13,13 @@
     </head>
 <body ng-controller='controller'>
     <label for="StartDate" class="field-label">{{verbiage.StartDateLabel}}</label>
-    <input id="StartDate" type="text" datetime-picker="MM/dd/yyyy HH:mm a" ng-model="startDate" is-open="startDateIsOpen" ng-blur="onStartDateBlur()"/>
+    <input id="StartDate" type="text" datetime-picker="MM/dd/yyyy HH:mm a" ng-model="startDateOld" is-open="startDateIsOpen" ng-blur="onStartDateBlur()"/>
     <span class="input-group-btn" style="display: inline-block;">
         <button type="button" class="btn btn-default" ng-click="openStartDateCalendar($event, prop)">
             <i class="fa fa-calendar"></i>
         </button>
     </span>
     <br/>
-        <input id="augumented" type="text" imod-datetime-picker-augumentor datetime-picker="MM/dd/yyyy HH:mm a" ng-model="startDate" is-open='startDate_isDatepickerOpen'/>
+        <input id="augumented" type="text" imod-datetime-picker-augumentor datetime-picker="MM/dd/yyyy hh:mm a" ng-model="startDate" is-open='startDate_isDatepickerOpen'/>
 </body>
 </html>

@@ -31,34 +31,49 @@
                 var input = document.getElementById('StartDate').value; 
                 var ticks = Date.parse(input); 
                 if (ticks) { 
-                    $scope.startDate = new Date(ticks); 
+                    $scope.startDateOld = new Date(ticks); 
             }else{
-                $scope.startDate = null;
+                $scope.startDateOld = null;
             }        
         };
     }
+
     
+
     angular
         .module('app', ['ui.bootstrap', 'ui.bootstrap.datetimepicker'])
         .controller('controller', ['$scope', controller])
-        .directive('imodDatetimePickerAugumentor', function(){
+        .directive('imodDatetimePickerAugumentor', function($parse) {
             var template = '<span class="input-group-btn" style="display: inline-block;"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>';
+            function linkFn(scope, element, attrs) {
+                var augument = angular.element(template);
+                augument.find('button').on('click', function(evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    scope.$apply(function() {
+                        $parse(attrs.isOpen).assign(scope, true);
+                    });
+                })
+                element.after(augument);
+                element.on('blur', function() {                    
+                    var ticks = Date.parse(element.val()),
+                        scopePropertyToSet = $parse(attrs.ngModel);
+                    if (ticks) {
+                        scope.$apply(function(){
+                            scopePropertyToSet.assign(new Date(ticks));
+                        });
+                    } else {
+                        scope.$apply(function(){
+                            scopePropertyToSet.assign(null);
+                        });
+                    }
+                    console.log(scope.startDate);
+                })
+            }
             return {
                 restrict: 'A',
                 require: 'datetimePicker',
-                link: function linkFn(scope, element, attrs) {
-                    var isOpenScopeValue = attrs.ngModel + "_isDatepickerOpen",
-                        augument = angular.element(template);
-                    //element.attr('is-open', isOpenScopeValue);
-                    augument.find('button').on('click', function(evt){
-                        evt.preventDefault(); 
-                        evt.stopPropagation();
-                        scope.$apply(function(){
-                            scope[isOpenScopeValue] = true;
-                        });                        
-                    })                   
-                    element.after(augument);
-                }
+                link: linkFn
             }
         });    
 })();
