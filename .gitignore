@@ -68,3 +68,6 @@ _UpgradeReport_Files
 ipch 
 .metadata
 __pycache__
+
+#dotnetcore
+project.lock.json
