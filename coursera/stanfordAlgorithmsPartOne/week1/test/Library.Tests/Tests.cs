@@ -1,18 +1,19 @@
-﻿using Inversions;
+﻿using System.IO;
+using Inversions;
 using Xunit;
 
 namespace Tests
 {
     public class AssertionData
     {
-        public AssertionData(string filePath, int result)
+        public AssertionData(string filePath, int numberOfInversions)
         {
             FilePath = filePath;
-            Result = result;
+            NumberOfInversions = numberOfInversions;
         }
 
         public string FilePath { get; }
-        public int Result { get; }
+        public int NumberOfInversions { get; }
         public static implicit operator AssertionData(string str)
         {
             var parts = str.Split(',');
@@ -23,12 +24,24 @@ namespace Tests
     public class InversionsTest
     {
         [Theory]
-        [InlineData("path1,5")]
+        [InlineData("singleNumber.txt,1")]
+        [InlineData("exampleFromLecture.txt,3")]
         public void Test1(string assertionDataString) 
         {
             AssertionData assertionData = assertionDataString;
             var counter = new InversionsCounter();
-            Assert.Equal(assertionData.FilePath.Length, assertionData.Result);
+            Assert.Equal(assertionData.NumberOfInversions, counter.Count(GetInputNumbers(assertionData.FilePath)));
+        }
+
+        private int[] GetInputNumbers(string filePath)
+        {
+            string[] lines = File.ReadAllLines(filePath);
+            int[] result = new int[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                result[i] = int.Parse(lines[i]);
+            }
+            return result;
         }
     }
 }

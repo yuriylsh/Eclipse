@@ -16,4 +16,12 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
+  <PropertyGroup>
+      <!-- We don't use any of MSBuild's resolution logic for resolving the framework, so just set these two
+              properties to any folder that exists to skip the GetReferenceAssemblyPaths task (not target) and
+              to prevent it from outputting a warning (MSB3644).
+          -->
+      <_TargetFrameworkDirectories>$(MSBuildThisFileDirectory)</_TargetFrameworkDirectories>
+      <_FullFrameworkReferenceAssemblyPaths>$(MSBuildThisFileDirectory)</_FullFrameworkReferenceAssemblyPaths>
+  </PropertyGroup>
 </Project>
