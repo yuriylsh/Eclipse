@@ -21,17 +21,17 @@ namespace Tests
         }
     }
 
-    public class InversionsTest
+    public class InversionsCounterTest
     {
-        [Theory]
-        [InlineData("singleNumber.txt,1")]
-        [InlineData("exampleFromLecture.txt,3")]
-        public void Test1(string assertionDataString) 
-        {
-            AssertionData assertionData = assertionDataString;
-            var counter = new InversionsCounter();
-            Assert.Equal(assertionData.NumberOfInversions, counter.Count(GetInputNumbers(assertionData.FilePath)));
-        }
+        //[Theory]
+        //[InlineData("singleNumber.txt,1")]
+        //[InlineData("exampleFromLecture.txt,3")]
+        //public void Test1(string assertionDataString) 
+        //{
+        //    AssertionData assertionData = assertionDataString;
+        //    var counter = new InversionsCounter();
+        //    Assert.Equal(assertionData.NumberOfInversions, 5/*counter.Count(GetInputNumbers(assertionData.FilePath))*/);
+        //}
 
         private int[] GetInputNumbers(string filePath)
         {
