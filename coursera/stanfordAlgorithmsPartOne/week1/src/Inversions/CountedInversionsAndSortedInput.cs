@@ -6,13 +6,13 @@
         {
         }
 
-        public CountedInversionsAndSortedInput(int numberOfInversions, int[] sortedInput)
+        public CountedInversionsAndSortedInput(long numberOfInversions, int[] sortedInput)
         {
             NumberOfInversions = numberOfInversions;
             SortedInput = sortedInput;
         }
 
-        public int NumberOfInversions;
+        public long NumberOfInversions;
         public int[] SortedInput;
     }
 }
