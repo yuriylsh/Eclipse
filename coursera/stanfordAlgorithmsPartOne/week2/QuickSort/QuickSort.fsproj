@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="PivotIndexSelector.fs" />
     <Compile Include="QuickSort.fs" />
     <None Include="Script.fsx" />
   </ItemGroup>

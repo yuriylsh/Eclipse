@@ -54,7 +54,9 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Library1.fs" />
+    <Compile Include="PivotIndexSelectorTests.fs" />
+    <Compile Include="PivotTests.fs" />
+    <Compile Include="QuickSorterTests.fs" />
     <Content Include="packages.config" />
     <Content Include="quickSortExamData.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
