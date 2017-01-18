@@ -16,13 +16,6 @@ class Program
         int height = Node.GetHeight(tree);
         sb.Append("Tree level: ").Append(height);
         NewLine();
-        for (int level = 0; level < height; level++)
-        {
-            var nodesAtLevel = Node.GetNodesAtLevel(tree, level);
-            string nodes = string.Join(",", nodesAtLevel.Select(node => node?.Value.ToString()?? " "));
-            sb.Append("Nodes at level " ).Append(level).Append(": ").Append(nodes);
-            NewLine();
-        }
         sb.Append(PrintTree(tree));
         NewLine();
         System.Console.WriteLine(sb.ToString());
@@ -37,23 +30,23 @@ class Program
         int height = Node.GetHeight(tree);
         int paddingCount = 0;
         
-        var result = new StringBuilder();
-        
+        var lines = new string[height + 1];
+        var line = new StringBuilder();
         for (int level = height; level >= 0; level--)
         {
-            var nodes = Node.GetNodesAtLevel(tree, level);
             var padding = new String(' ', paddingCount * nodeWidth);
+            line.Append(padding);
             var spacerCount = paddingCount * 2 + 1;
             var spacer = new String(' ', spacerCount * nodeWidth);
-            result.Append(padding);
-            var nodeValues = nodes.Select(n => string.Format(nodeValueFormat, n?.Value));
-            result.Append(string.Join(spacer, nodeValues));
-            result.Append(padding);
-            result.Append(Environment.NewLine);
+            var nodeValues = Node.GetNodesAtLevel(tree, level).Select(n => string.Format(nodeValueFormat, n?.Value));
+            line.Append(string.Join(spacer, nodeValues));
+            line.Append(padding);
+            lines[level] = line.ToString();
+            line.Clear();
             paddingCount = spacerCount;
         }   
         
-        return result.ToString();
+        return string.Join(Environment.NewLine, lines);
     }
     
 
