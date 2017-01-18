@@ -6,18 +6,27 @@ class Program
 {
     static void Main(string[] args)
     {
-        var tree = GetBinarySearchTree();
+        var tree = CreateBinarySearchTree(5);
         var sb = new StringBuilder();
 
+        sb.Append(PrintTree(tree));
+        NewLine();
+        sb.Append("In order traversal: ");
         Node.TraverseInOrder(tree, PrintVisitor);
         NewLine();
+        sb.Append("Pre order traversal: " );
         Node.TraversePreOrder(tree, PrintVisitor);
         NewLine();
         int height = Node.GetHeight(tree);
-        sb.Append("Tree level: ").Append(height);
+        sb.Append("Tree height: ").Append(height);
         NewLine();
-        sb.Append(PrintTree(tree));
+        
+        int numberOfNodes = 0;
+        Node.TraverseInOrder(tree, node => numberOfNodes++);
+        sb.Append("Number of nodes: ").Append(numberOfNodes);
         NewLine();
+
+        
         System.Console.WriteLine(sb.ToString());
 
         void PrintVisitor(Node node) => sb.Append(node.Value).Append(",");
@@ -48,18 +57,43 @@ class Program
         
         return string.Join(Environment.NewLine, lines);
     }
-    
 
-    private static Node GetBinarySearchTree()
+    private static Node CreateBinarySearchTree(int oneBasedHeight)
     {
-        var root = new Node{ Value = 8 };
-        var level1Left = new Node { Value = 4};
-        var level1Right = new Node { Value = 10 };
-        level1Left.LeftChild = new Node { Value = 2 };
-        level1Left.RightChild = new Node { Value = 6};
-        level1Right.RightChild = new Node { Value = 20 };
-        root.LeftChild = level1Left;
-        root.RightChild = level1Right;
+        
+        int numberOfNodes = (1 << oneBasedHeight) - 1;
+        var nodeValues = GetNodeValues(numberOfNodes, 1, numberOfNodes < 99 ? 99 : numberOfNodes);
+
+        var root = new Node{ Value = nodeValues[0]};
+        for(var i = 1; i < numberOfNodes - 1; i++){
+            Add(root, nodeValues[i]);
+        }
+
         return root;
+
+            void Add(Node node, int item)
+            {
+                if(item < node.Value){
+                    if(node.LeftChild == null) node.LeftChild = new Node{ Value = item};
+                    else Add(node.LeftChild, item);
+                }else{
+                    if(node.RightChild == null) node.RightChild = new Node { Value = item };
+                    else Add(node.RightChild, item);
+                }
+            }
+
+        
+            int[] GetNodeValues(int n, int minValue, int maxValue)
+            {
+                var rnd = new Random((int)DateTime.Now.Ticks);
+                var result = new int[n];
+                for (int i = 0; i < n; i++)
+                {
+                    var newItem = rnd.Next(minValue, maxValue);
+                    while(result.Contains(newItem)) newItem = rnd.Next(minValue, maxValue);
+                    result[i] = newItem;
+                }
+                return result;
+            }
     }
 }
