@@ -1,0 +1,6 @@
+﻿{
+  "connectionStrings": {
+    "results": "Password=bigsecret8526;User ID=websa;Persist Security Info=True;Initial Catalog=EncompassPerformanceResults;Data Source=172.16.0.91",
+    "loadtest": "Password=bigsecret8526;User ID=websa;Persist Security Info=True;Initial Catalog=LoadTest2010;Data Source=172.16.1.33\\SQLEXPRESS"
+  } 
+}

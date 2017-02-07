@@ -1,13 +1,9 @@
-﻿Load testing results viewer
-@section BodyEndScripts
-{   <environment names="Development">
-        <script src="~/cdnlibs/jquery.min.js"></script>
-        <script src="~/cdnlibs/jsrender.min.js"></script>
-        <script src="~/cdnlibs/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    </environment>
-    <environment names="Production">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    </environment>
-    <script src="js/site.min.js"></script>}
+﻿@model  HomeIndexViewModel
+<header class="resultsContainerHeader">Available test results:</header>
+<div id="resultsGrid"></div>
+<script id="nameEditLink" type="text/x-jsrender"><a class='resultName' data-id='{{:id}}' data-name='{{:name}}' href='javascript:;'>{{:nameOrPrompt}}</a></script>
+@section BodyEndScripts{
+    <environment Names="Production">https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js</environment>
+    <environment Names="Development"><script src="cdnlibs/jsrender.min.js"></script></environment>
+    <script>initHomePage();</script>
+}
