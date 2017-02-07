@@ -21,11 +21,18 @@ namespace iModules.LoadTestingResultsViewer.Views.Home
             return View(new HomeIndexViewModel());
         }
 
+        [HttpGet("/GetInitialResults")]
+        public async Task<ActionResult> GetInitialResults(int pageIndex, int pageSize)
+        {
+            var (results, count) = await _resultIdentifiersRepository.GetInitialResultsAsync(pageIndex, pageSize);
+            return Json(new {data = results, itemsCount = count});
+        }
+
         [HttpGet("/GetResults")]
         public async Task<ActionResult> GetResults(int pageIndex, int pageSize)
         {
-            var (results, count) = await _resultIdentifiersRepository.GetResultsAsync(pageIndex, pageSize);
-            return Json(new {data = results, itemsCount = count});
+            var results = await _resultIdentifiersRepository.GetResultsAsync(pageIndex, pageSize);
+            return Json(results);
         }
 
         [HttpPost("/SetResultName")]

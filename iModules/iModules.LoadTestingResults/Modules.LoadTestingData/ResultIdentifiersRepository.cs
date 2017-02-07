@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Modules.LoadTestingData
 {
@@ -15,12 +16,11 @@ namespace Modules.LoadTestingData
             _connectionString = connectionString;
         }
 
-        public async Task<(IEnumerable<ResultIdentifier>, int)> GetResultsAsync(int pageIndex, int pageSize)
+        public async Task<(IEnumerable<ResultIdentifier>, int)> GetInitialResultsAsync(int pageIndex, int pageSize)
         {
             var results = new List<ResultIdentifier>(pageSize);
             int totalCount;
-            var offset = (pageIndex - 1) * pageSize;
-            var sql = string.Format(Sql.ResultRepositoryGetResultsFormat, offset, pageSize);
+            var sql = string.Format(Sql.ResultRepositoryGetInitialResultsFormat, CalculateOffset(pageIndex, pageSize), pageSize);
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(sql, connection))
             {
@@ -43,6 +43,20 @@ namespace Modules.LoadTestingData
             }
             return (results, totalCount);
         }
+
+        public async Task<IEnumerable<ResultIdentifier>> GetResultsAsync(int pageIndex, int pageSize)
+        {
+            var sql = string.Format(Sql.ResultRepositoryGetResultsFormat, CalculateOffset(pageIndex, pageSize), pageSize);
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                return await connection.QueryAsync<ResultIdentifier>(sql);
+            }
+        }
+
+        private int CalculateOffset(int pageIndex, int pageSize) => (pageIndex - 1) * pageSize;
+
+
         private static string GetNullableString(object dataReaderValue) => dataReaderValue is DBNull ? null : (string)dataReaderValue;
 
         public async Task SetResultName(Guid id, string name)

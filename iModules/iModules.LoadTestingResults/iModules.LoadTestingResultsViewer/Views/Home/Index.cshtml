@@ -1,6 +1,18 @@
 ﻿@model  HomeIndexViewModel
 <header class="resultsContainerHeader">Available test results:</header>
-<div id="resultsGrid"></div>
+<div id="resultsGrid">
+    <table class="table table table-condensed table-hover">
+        <tr>
+            <th>Date</th>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </table>
+    <ul class="pager">
+        <li id="pagerPrevious"><a href="#">Previous</a></li>
+        <li id="pagerNext"><a href="#">Next</a></li>
+    </ul>
+</div>
 <script id="nameEditLink" type="text/x-jsrender"><a class='resultName' data-id='{{:id}}' data-name='{{:name}}' href='javascript:;'>{{:nameOrPrompt}}</a></script>
 @section BodyEndScripts{
     <environment Names="Production">https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js</environment>

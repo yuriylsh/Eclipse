@@ -1,73 +1,61 @@
-﻿var nameLinkTemplate;
-
-function initHomePage() {
+﻿function initHomePage() {
     populateResultsGrid();
-    setupNameEdit();
-    nameLinkTemplate = $.templates("#nameEditLink");
 }
 
-function populateResultsGrid() {
-
-    var resultsGridController = {
-        loadData: function (filter) {
-            return $.ajax({
-                type: "GET",
-                url: "/GetResults",
-                data: filter
-            });
-        },
-        updateItem: function(item) {
-            $.ajax({
-                type: "POST",
-                url: "/SetResultName",
-                data: item
-            });
+var resultsPageSize = 10;
+var resultsPager = (function pager() {
+    var pagerNext = document.getElementById("pagerNext"),
+        pagerPrevious = document.getElementById("pagerPrevious"),
+        totalCount = 0,
+        page = 0;
+    function setTotal(total) { totalCount = total; }
+    function setCurrentPageData(pageNumber, itemsCount) {
+        page = pageNumber;
+        if (itemsCount === 0 || pageNumber * resultsPageSize >= totalCount) {
+            pagerNext.className = "disabled";
+        } else {
+            pagerNext.className = "";
         }
-    }
 
-    $("#resultsGrid").jsGrid({
-        width: "100%",
-        filtering: false,
-        editing: false,
-        sorting: false,
-        paging: true,
-        autoload: true,
-        pageLoading: true,
-        pageSize: 10,
-        pageButtonCount: 5,
-        controller: resultsGridController,
-        fields: [
-            { name: "date", type: "text", width: "25%"},
-            { name: "id", type: "text", width: "25%"},
-            { name: "name", type: "text", width: "50%", itemTemplate: editNameTemplate}
-        ]
+        pagerPrevious.className = pageNumber === 1 ? "disabled" : "";
+    }
+    return {
+        setTotal: setTotal,
+        setCurrentPageData: setCurrentPageData,
+        onNext: function onNext(callback) { pagerNext.addEventListener("click", callback); },
+        onPrevious: function onPrevious(callback) { pagerPrevious.addEventListener("click", callback); },
+        getCurrentPage: function getCurrentPage() { return page; }
+    }
+})();
+function populateResultsGrid() {
+    $.ajax({
+        type: "GET",
+        url: "/GetInitialResults",
+        data: {pageIndex: 1, pageSize: resultsPageSize}
+    }).done(function(resultsWithTotalCount) {
+        resultsPager.setTotal(resultsWithTotalCount.itemsCount);
+        resultsPager.setCurrentPageData(1, resultsWithTotalCount.data.length);
     });
 
-    function editNameTemplate(value, item) {
-        var name = item.name == null ? "[click to enter name]" : item.name;
-        return nameLinkTemplate.render({id: item.id, name: (item.name || ""), nameOrPrompt: name});
+    resultsPager.onNext(function onPagerNext() {
+        pagerClickHandler(resultsPager.getCurrentPage() + 1);
+    });
+    resultsPager.onPrevious(function onPagerNext() {
+        pagerClickHandler(resultsPager.getCurrentPage() -1);
+    });
+
+    function pagerClickHandler(newPageNumber) {
+        $.ajax({
+            type: "GET",
+            url: "/GetResults",
+            data: { pageIndex: newPageNumber, pageSize: resultsPageSize }
+        }).done(function (results) {
+            resultsPager.setCurrentPageData(newPageNumber, results.length);
+        });
     }
 }
 
-function setupNameEdit() {
-    
-    $("#resultsGrid").on("click", "a.resultName", onNameEdit);
 
-    function onNameEdit(evt) {
-        var data = evt.target.dataset;
-        var id = data["id"];
-        var newName = prompt("Enter new name for the result " + id, data["name"]);
-        if (newName.length) {
-            processNameEdit(newName, id, evt.target);
-        }
-    }
-
-    function processNameEdit(newName, resultId, elem) {
-        var row = $(elem).closest("tr");
-        var resultItem = row.data("JSGridItem");
-        $("#resultsGrid").jsGrid("updateItem", row, { id: resultId, name: newName, date: resultItem.date });
-    }
-}
 
 
 
