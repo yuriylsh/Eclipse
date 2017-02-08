@@ -1,19 +1,27 @@
 ﻿@model  HomeIndexViewModel
 <header class="resultsContainerHeader">Available test results:</header>
-<div id="resultsGrid">
-    <table class="table table table-condensed table-hover">
-        <tr>
-            <th>Date</th>
-            <th>Id</th>
-            <th>Name</th>
-        </tr>
-    </table>
-    <ul class="pager">
-        <li id="pagerPrevious"><a href="#">Previous</a></li>
-        <li id="pagerNext"><a href="#">Next</a></li>
-    </ul>
-</div>
+<table id="resultsGrid" class="table table table-condensed table-hover">
+    <tr id="resultsGridHeaderRow">
+        <th>Date</th>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+</table>
+<ul class="pager">
+    <li id="pagerPrevious"><a href="#">Previous</a></li>
+    <li id="pagerNext"><a href="#">Next</a></li>
+</ul>
 <script id="nameEditLink" type="text/x-jsrender"><a class='resultName' data-id='{{:id}}' data-name='{{:name}}' href='javascript:;'>{{:nameOrPrompt}}</a></script>
+<script id="resultsGridRow" type="text/x-jsrender">
+    {{for rows}}
+        <tr>
+            <td>{{:date}}</td>
+            <td>{{:id}}</td>
+            <td>Name</td>
+        </tr>
+    {{/for}}
+</script>
+
 @section BodyEndScripts{
     <environment Names="Production">https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js</environment>
     <environment Names="Development"><script src="cdnlibs/jsrender.min.js"></script></environment>

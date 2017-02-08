@@ -35,6 +35,7 @@ function populateResultsGrid() {
     }).done(function(resultsWithTotalCount) {
         resultsPager.setTotal(resultsWithTotalCount.itemsCount);
         resultsPager.setCurrentPageData(1, resultsWithTotalCount.data.length);
+        populateGridWithResults(resultsWithTotalCount.data);
     });
 
     resultsPager.onNext(function onPagerNext() {
@@ -51,7 +52,23 @@ function populateResultsGrid() {
             data: { pageIndex: newPageNumber, pageSize: resultsPageSize }
         }).done(function (results) {
             resultsPager.setCurrentPageData(newPageNumber, results.length);
+            clearGrid();
+            populateGridWithResults(results);
         });
+    }
+
+    var headerRow = document.getElementById("resultsGridHeaderRow");
+    var gridRowTemplage = $.templates("#resultsGridRow");
+
+    function clearGrid() {
+        while (headerRow.nextSibling) {
+            headerRow.nextSibling.remove();
+        }
+    }
+
+    function populateGridWithResults(results) {
+        var rowsHtml = gridRowTemplage.render({ rows: results });
+        headerRow.insertAdjacentHTML("afterend", rowsHtml);
     }
 }
 
