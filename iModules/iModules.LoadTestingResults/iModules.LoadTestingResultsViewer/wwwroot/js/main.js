@@ -1,8 +1,10 @@
-﻿function initHomePage() {
+﻿var resultsPageSize = 10;
+
+function initHomePage() {
     populateResultsGrid();
+    setupNameEdit();
 }
 
-var resultsPageSize = 10;
 var resultsPager = (function pager() {
     var pagerNext = document.getElementById("pagerNext"),
         pagerPrevious = document.getElementById("pagerPrevious"),
@@ -27,6 +29,7 @@ var resultsPager = (function pager() {
         getCurrentPage: function getCurrentPage() { return page; }
     }
 })();
+
 function populateResultsGrid() {
     $.ajax({
         type: "GET",
@@ -67,10 +70,38 @@ function populateResultsGrid() {
     }
 
     function populateGridWithResults(results) {
+        results.forEach(function(r) {
+            r.nameOrPrompt = r.name === null ? "[click to enter name]" : r.name;
+        });
         var rowsHtml = gridRowTemplage.render({ rows: results });
         headerRow.insertAdjacentHTML("afterend", rowsHtml);
     }
 }
+
+function setupNameEdit() {
+    $("#resultsGrid").on("click", "a.resultName", onNameEdit);
+
+    function onNameEdit(evt) {
+        var data = evt.target.dataset;
+        var id = data["id"];
+        var newName = prompt("Enter new name for the result " + id, data["name"]);
+        if (newName.length) {
+            processNameEdit(newName, id, evt.target);
+        }
+    }
+
+    function processNameEdit(newName, resultId, elem) {
+        $.ajax({
+            type: "POST",
+            url: "/SetResultName",
+            data: {name: newName, id: resultId}
+        }).done(function () {
+            elem.dataset["name"] = newName;
+            elem.innerText = newName;
+        });
+    }
+}
+
 
 
 
