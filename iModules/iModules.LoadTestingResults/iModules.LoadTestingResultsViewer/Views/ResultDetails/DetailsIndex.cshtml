@@ -35,3 +35,28 @@
     </table>
 </table>
 
+<h2>Page timings</h2>
+<table>
+    <table id="pageTimings" class="table table-striped">
+        <tr>
+            <th>Test case</th>
+            <th>Request</th>
+            <th>Average Page Time, sec</th>
+        </tr>
+        @*@foreach (var test in Model.PageTimings)
+        {
+            <tr>
+                <td>@test.Name</td>
+                <td>@test.Runs</td>
+                <td class="pass">@test.Passed</td>
+                <td class="fail">@test.Failed @if (test.Failed > 0)
+                {<a href="@Model.GetErrorsLink(test, Model.LoadTestRunId)" class="errorsLink">*</a>}</td>
+                <td>@test.Percentile90.ToString("#.##")</td>
+                <td>@test.Minimum.ToString("#.##")</td>
+                <td>@test.Maximum.ToString("#.##")</td>
+            </tr>
+        }*@
+    </table>
+</table>
+
+

@@ -71,5 +71,20 @@ WHERE category.CategoryName = 'LoadTest:Page' and instance.CumulativeValue IS NO
 	  AND scenario.ScenarioName IS NOT NULL
 	  AND CounterName = 'Avg. Page Time'
 ORDER BY TestCaseName, request.RequestId";
+
+        public static string LoadTestStatistics = @"
+SELECT category.CategoryName, counter.CounterName, instance.CumulativeValue
+FROM LoadTestRun as run
+INNER JOIN LoadTestPerformanceCounterCategory AS category 
+    ON run.LoadTestRunId = category.LoadTestRunId
+INNER JOIN LoadTestPerformanceCounter AS counter 
+    ON category.LoadTestRunId = counter.LoadTestRunId
+    AND category.CounterCategoryId = counter.CounterCategoryId
+INNER JOIN LoadTestPerformanceCounterInstance AS instance 
+    ON counter.CounterId = instance.CounterId
+    AND counter.LoadTestRunId = instance.LoadTestRunId
+WHERE instance.cumulativeValue IS NOT NULL
+	  AND category.LoadTestRunId = @loadTestRunId
+	  AND instance.InstanceName = '_Total'";
     }
 }
