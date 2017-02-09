@@ -11,8 +11,10 @@ a.resultName:before {
 a.resultName:hover {
   cursor: text;
 }
-#resultsGrid {
+.availableResults {
   width: 100em;
+  border-bottom: .5em solid lightgrey;
+  margin-bottom: 3em;
 }
 ul.pager {
   text-align: start;
@@ -29,7 +31,8 @@ ul.pager {
   width: auto;
   border-spacing: 1em;
 }
-.borderlessTable tbody tr td {
+.borderlessTable tbody tr td,
+.borderlessTable tbody tr th {
   border-top: none;
 }
 .pass {
@@ -58,4 +61,8 @@ td.errorMessage {
 }
 td button.btn {
   padding: 0 .5em;
+}
+#selectedGrid {
+  width: auto;
+  margin-top: -1em;
 }

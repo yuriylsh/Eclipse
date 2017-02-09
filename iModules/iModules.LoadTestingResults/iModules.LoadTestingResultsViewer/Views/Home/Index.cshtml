@@ -1,26 +1,28 @@
-﻿<h3>Available test results:</h3>
-<table id="resultsGrid" class="table table-hover">
-    <tr id="resultsGridHeaderRow">
-        <th>When</th>
-        <th>Id</th>
-        <th>Name</th>
-        <th></th>
-    </tr>
-</table>
-<ul class="pager">
-    <li id="pagerPrevious"><a href="#">Previous</a></li>
-    <li id="pagerNext"><a href="#">Next</a></li>
-</ul>
-<em id="pagerSummary"></em>
-
+﻿<div class="availableResults">
+    <h3>Available test results:</h3>
+    <table id="resultsGrid" class="table table-hover">
+        <tr id="resultsGridHeaderRow">
+            <th>When</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </table>
+    <ul class="pager">
+        <li id="pagerPrevious"><a href="#">Previous</a></li>
+        <li id="pagerNext"><a href="#">Next</a></li>
+    </ul>
+    <em id="pagerSummary"></em>
+</div>
 <h4>Selected results:</h4>
-<table id="selectedGrid" class="table table-hover">
+<table id="selectedGrid" class="table table-hover borderlessTable">
     <tr id="selectedGridHeaderRow">
-        <th>Name</th>
+        <th></th>
         <th></th>
         <th></th>
     </tr>
 </table>
+
 
 <script id="nameEditLink" type="text/x-jsrender"><a class='resultName' data-id='{{:id}}' data-name='{{:name}}' href='javascript:;'>{{:nameOrPrompt}}</a></script>
 <script id="resultDetailsLink" type="text/x-jsrender"><a class='resultDetails' data-id='{{:id}}' href='/Details/{{:id}}'>{{:id}}</a></script>

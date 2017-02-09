@@ -1,7 +1,8 @@
 ﻿* + * {
     margin-top: 1.5em;
 }
-body{
+
+body {
     padding-left: 1em;
 }
 
@@ -18,8 +19,10 @@ a {
     }
 }
 
-#resultsGrid{
+.availableResults {
     width: 100em;
+    border-bottom: .5em solid lightgrey;
+    margin-bottom: 3em;
 }
 
 ul.pager{
@@ -38,9 +41,12 @@ ul.pager{
     width: auto;
     border-spacing: 1em;
 }
-.borderlessTable tbody tr td{
-    border-top: none;    
-}
+
+.borderlessTable tbody tr {
+    td, th {
+        border-top: none;
+    }
+}      
 
 .pass{
     color:seagreen;
@@ -71,4 +77,8 @@ td.errorMessage{
 
 td button.btn{
     padding:0 .5em;
+}
+#selectedGrid{
+    width: auto;
+    margin-top: -1em;
 }
