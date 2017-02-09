@@ -1,4 +1,4 @@
-﻿namespace Modules.LoadTestingData
+﻿namespace iModules.LoadTestingData
 {
     public class TestCase
     {

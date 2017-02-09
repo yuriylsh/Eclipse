@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data;
 
-namespace Modules.LoadTestingData
+namespace iModules.LoadTestingData
 {
     public class LoadTestRepository
     {
@@ -60,6 +59,24 @@ namespace Modules.LoadTestingData
                 }
             }
             return result;
+        }
+
+        public async Task<IEnumerable<PageTiming>> GetPageTimings(int loadTestRunId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                return await connection.QueryAsync<PageTiming>(Sql.PageTimings, new { loadTestRunId = loadTestRunId });
+            }
+        }
+
+        public async Task<IEnumerable<LoadTestCounter>> GetLoadTestCounters(int loadTestRunId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                return await connection.QueryAsync<LoadTestCounter>(Sql.LoadTestCounters, new { loadTestRunId = loadTestRunId });
+            }
         }
 
         public async Task<IEnumerable<TestRunMessage>> GetTestRunMessages(int loadTestRunId, string testCaseName)

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Modules.LoadTestingData
+namespace iModules.LoadTestingData
 {
     public interface ITestCases
     {
@@ -9,6 +9,5 @@ namespace Modules.LoadTestingData
         int TotalPassed { get;}
 
         IEnumerable<TestCase> Cases { get; }
-
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using iModules.LoadTestingResultsViewer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Modules.LoadTestingData;
+using iModules.LoadTestingData;
 
 namespace iModules.LoadTestingResultsViewer
 {
@@ -19,13 +19,7 @@ namespace iModules.LoadTestingResultsViewer
         public async Task<ActionResult> DetailsIndex(Guid id)
         {
             ViewBag.Title = "Details for " + id;
-
-            var metadata = await _repository.GetTestMetadataAsync(id);
-            var vm = DetailsViewModel.FromMetadata(metadata);
-            var testCases = await _repository.GetTestCasesAsync(metadata.LoadTestRunId);
-            vm.TotalFailedTests = testCases.TotalFailed;
-            vm.TotalPassedTests = testCases.TotalPassed;
-            vm.TestCases = testCases.Cases;
+            var vm = await DetailsViewBuilder.Build(id, _repository);
             return View(vm);
         }
 

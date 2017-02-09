@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Modules.LoadTestingData
+namespace iModules.LoadTestingData
 {
     public class LoadTestMetadata
     {

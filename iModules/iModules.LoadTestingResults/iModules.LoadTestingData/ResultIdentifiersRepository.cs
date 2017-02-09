@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 
-namespace Modules.LoadTestingData
+namespace iModules.LoadTestingData
 {
     public class ResultIdentifiersRepository
     {

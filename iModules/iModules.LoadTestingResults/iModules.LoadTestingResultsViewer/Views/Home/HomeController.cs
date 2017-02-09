@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using iModules.LoadTestingResultsViewer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Modules.LoadTestingData;
+using iModules.LoadTestingData;
 
 namespace iModules.LoadTestingResultsViewer
 {

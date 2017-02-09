@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using Modules.LoadTestingData;
+using iModules.LoadTestingData;
 
 namespace iModules.LoadTestingResultsViewer.ViewModels
 {
@@ -20,6 +19,10 @@ namespace iModules.LoadTestingResultsViewer.ViewModels
         public int TotalFailedTests { get; set; }
 
         public IEnumerable<TestCase> TestCases { get; set; }
+
+        public IEnumerable<PageTiming> PageTimings { get; set; }
+
+        public IEnumerable<LoadTestCounter> LoadTestCounters { get; set; }
 
         public static DetailsViewModel FromMetadata(LoadTestMetadata metadata)
         {

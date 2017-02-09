@@ -48,3 +48,11 @@ td.errorMessage {
   max-width: 50em;
   word-wrap: break-word;
 }
+#pageTimings,
+#loadTestCounters {
+  width: auto;
+}
+#pageTimings td,
+#loadTestCounters td {
+  padding-right: 1em;
+}

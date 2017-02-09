@@ -1,4 +1,4 @@
-﻿namespace Modules.LoadTestingData
+﻿namespace iModules.LoadTestingData
 {
     internal static class Sql
     {
@@ -72,8 +72,8 @@ WHERE category.CategoryName = 'LoadTest:Page' and instance.CumulativeValue IS NO
 	  AND CounterName = 'Avg. Page Time'
 ORDER BY TestCaseName, request.RequestId";
 
-        public static string LoadTestStatistics = @"
-SELECT category.CategoryName, counter.CounterName, instance.CumulativeValue
+        public static string LoadTestCounters = @"
+SELECT category.CategoryName, counter.CounterName, instance.CumulativeValue, counter.HigherIsBetter
 FROM LoadTestRun as run
 INNER JOIN LoadTestPerformanceCounterCategory AS category 
     ON run.LoadTestRunId = category.LoadTestRunId

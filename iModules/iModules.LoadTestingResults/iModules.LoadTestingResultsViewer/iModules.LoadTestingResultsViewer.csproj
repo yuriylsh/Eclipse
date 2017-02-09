@@ -19,7 +19,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Modules.LoadTestingData\iModules.LoadTestingData.csproj" />
+    <ProjectReference Include="..\iModules.LoadTestingData\iModules.LoadTestingData.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="configuration.json">

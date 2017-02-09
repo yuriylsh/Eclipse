@@ -1,4 +1,4 @@
-﻿using Modules.LoadTestingData;
+﻿using iModules.LoadTestingData;
 
 namespace iModules.LoadTestingResultsViewer.ViewModels
 {

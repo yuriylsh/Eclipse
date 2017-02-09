@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Modules.LoadTestingData;
+using iModules.LoadTestingData;
 
 namespace iModules.LoadTestingResultsViewer.ViewModels
 {
