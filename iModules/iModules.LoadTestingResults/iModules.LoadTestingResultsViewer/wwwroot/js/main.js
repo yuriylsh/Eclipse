@@ -135,13 +135,7 @@ function setupAddButtons(selected, testSelectionPubSub) {
             var newRow = { id: id, name: name };
             selected.push(newRow);
             appendNewRow(newRow);
-            $.ajax({
-                type: "GET",
-                url: "/GetTestData/" + id
-            }).done(function processTestData(testData) {
-                findTestById(selected, id).testData = testData;
-                testSelectionPubSub.fire(selected);
-            });
+            testSelectionPubSub.fire(selected);
         };
     }
 
@@ -168,5 +162,18 @@ function setupSelectedGrid(selected, testSelectionPubSub) {
 }
 
 function onTestSelectionChanged(selected) {
-    
+    var ids = _.map(selected,
+        function getId(test) {
+            return test.id;
+        });
+    $.ajax({
+        type: "GET",
+        url: "/GetTestData",
+        traditional: true,
+        data: { ids: ids }
+    }).done(processComparisonData);
+
+    function processComparisonData(data) {
+        console.log(data);
+    }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using iModules.LoadTestingResultsViewer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -31,10 +33,10 @@ namespace iModules.LoadTestingResultsViewer
             return View(vm);
         }
 
-        [HttpGet("/GetTestData/{id:Guid}")]
-        public async Task<ActionResult> GetTestData(Guid id)
+        [HttpGet("/GetTestData")]
+        public async Task<ActionResult> GetTestData(IEnumerable<Guid> ids)
         {
-            return Json(data: await TestResultDataBuilder.BuildAsync(id, _repository));
+            return Json(data: await TestResultDataBuilder.BuildAsync(ids.First(), _repository));
         }
     }
 }
