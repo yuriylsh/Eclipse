@@ -56,3 +56,6 @@ td.errorMessage {
 #loadTestCounters td {
   padding-right: 1em;
 }
+td button.btn {
+  padding: 0 .5em;
+}

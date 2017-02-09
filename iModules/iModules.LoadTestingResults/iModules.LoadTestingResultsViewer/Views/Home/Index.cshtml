@@ -1,9 +1,10 @@
-﻿<h3 class="resultsContainerHeader">Available test results:</h3>
+﻿<h3>Available test results:</h3>
 <table id="resultsGrid" class="table table-hover">
     <tr id="resultsGridHeaderRow">
         <th>When</th>
         <th>Id</th>
         <th>Name</th>
+        <th></th>
     </tr>
 </table>
 <ul class="pager">
@@ -11,20 +12,40 @@
     <li id="pagerNext"><a href="#">Next</a></li>
 </ul>
 <em id="pagerSummary"></em>
+
+<h4>Selected results:</h4>
+<table id="selectedGrid" class="table table-hover">
+    <tr id="selectedGridHeaderRow">
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </tr>
+</table>
+
 <script id="nameEditLink" type="text/x-jsrender"><a class='resultName' data-id='{{:id}}' data-name='{{:name}}' href='javascript:;'>{{:nameOrPrompt}}</a></script>
 <script id="resultDetailsLink" type="text/x-jsrender"><a class='resultDetails' data-id='{{:id}}' href='/Details/{{:id}}'>{{:id}}</a></script>
+<script id="addButton" type="text/x-jsrender"><button type="button" class="btn btn-primary btnAdd" data-id="{{:id}}" data-name="{{if name}}{{:name}}{{else}}{{:id}}{{/if}}">Add</button></script>
 <script id="resultsGridRow" type="text/x-jsrender">
     {{for rows}}
         <tr>
             <td>{{:date}}</td>
             <td>{{include tmpl="#resultDetailsLink" /}}</td>
             <td>{{include tmpl="#nameEditLink"/}}</td>
+            <td>{{include tmpl="#addButton"/}}</td>
         </tr>
     {{/for}}
 </script>
+<script id="selectedGridRow" type="text/x-jsrender">
+    <tr>
+        <td>{{:name}}</td>
+        <td><button type="button" class="btn btn-primary btnBaseline" data-id="{{:id}}">Set as baseline</button></td>
+        <td><button type="button" class="btn btn-primary btn-danger btnRemove" data-id="{{:id}}">Remove</button></td>
+    </tr>
+</script>
 
-@section BodyEndScripts{
-    <environment Names="Production">https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js</environment>
-    <environment Names="Development"><script src="cdnlibs/jsrender.min.js"></script></environment>
-    <script>initHomePage();</script>
-}
+    @section BodyEndScripts{
+        <environment Names="Production"><script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script></environment>
+        <environment Names="Development">
+        <script src="cdnlibs/jsrender.min.js"></script></environment>
+        <script>initHomePage();</script>
+    }

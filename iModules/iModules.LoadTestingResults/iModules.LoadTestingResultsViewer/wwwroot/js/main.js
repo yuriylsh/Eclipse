@@ -3,6 +3,9 @@
 function initHomePage() {
     populateResultsGrid();
     setupNameEdit();
+    var selected = {};
+    setupAddButtons(selected);
+    setupSelectedGrid(selected);
 }
 
 var resultsPager = (function pager() {
@@ -69,8 +72,8 @@ function populateResultsGrid() {
         });
     }
 
-    var headerRow = document.getElementById("resultsGridHeaderRow");
-    var gridRowTemplage = $.templates("#resultsGridRow");
+    var headerRow = document.getElementById("resultsGridHeaderRow"),
+        gridRowTemplate = $.templates("#resultsGridRow");
 
     function clearGrid() {
         while (headerRow.nextSibling) {
@@ -82,7 +85,7 @@ function populateResultsGrid() {
         results.forEach(function(r) {
             r.nameOrPrompt = r.name === null ? "[click to enter name]" : r.name;
         });
-        var rowsHtml = gridRowTemplage.render({ rows: results });
+        var rowsHtml = gridRowTemplate.render({ rows: results });
         headerRow.insertAdjacentHTML("afterend", rowsHtml);
     }
 }
@@ -111,8 +114,40 @@ function setupNameEdit() {
     }
 }
 
+function setupAddButtons(selected) {
+    var headerRow = document.getElementById("selectedGridHeaderRow"),
+        gridRowTemplate = $.templates("#selectedGridRow");
 
+    $("#resultsGrid").on("click", "button.btnAdd", onAddButtonClicked);
 
+    function onAddButtonClicked(evt) {
+        var data = evt.target.dataset,
+            id = data["id"],
+            name = data["name"];
+        if (!selected[id]) {
+            var newRow = { id: id, name: name };
+            selected[id] = newRow;
+            appendNewRow(newRow);
+        };
+    }
 
+    function appendNewRow(rowData) {
+        var rowHtml = gridRowTemplate.render(rowData);
+        headerRow.parentNode.lastElementChild.insertAdjacentHTML("afterend", rowHtml);
+    }
+}
 
+function setupSelectedGrid(selected) {
+    var grid = $("#selectedGrid");
 
+    grid.on("click", "button.btnRemove", onRemoveButtonClicked);
+
+    function onRemoveButtonClicked(evt) {
+        var data = evt.target.dataset,
+            id = data["id"];
+        delete selected[id];
+        var removeButton = evt.target;
+        var row = removeButton.parentNode.parentNode;
+        row.remove();
+    }
+}
