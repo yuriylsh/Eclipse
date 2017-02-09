@@ -25,6 +25,7 @@ namespace iModules.LoadTestingResultsViewer
             services.AddMvc();
 
             services.AddSingleton(new ResultIdentifiersRepository(Configuration["connectionStrings:results"]));
+            services.AddSingleton(new LoadTestRepository(Configuration["connectionStrings:loadtest"]));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

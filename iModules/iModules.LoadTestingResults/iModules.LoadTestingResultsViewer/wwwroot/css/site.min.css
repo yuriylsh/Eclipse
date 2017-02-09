@@ -1,1 +1,1 @@
-*+*{margin-top:1.5em}
+*+*{margin-top:1.5em}body{padding-left:1em}a.resultName:before{content:"\270f";padding-right:.2em}a.resultName:hover{cursor:text}#resultsGrid{width:100em}ul.pager{text-align:start;display:inline-block}#pagerSummary{display:inline-block;margin-left:1em;font-size:smaller;color:grey}#generalInfo{border:none;width:auto;border-spacing:1em}.borderlessTable tbody tr td{border-top:none}.pass{color:#2e8b57}.fail{color:#ff4500}.errorsLink,.errorsLink:hover,.errorsLink:visited{color:#ff4500;padding-left:.1em}td.errorMessage{max-width:50em;word-wrap:break-word}

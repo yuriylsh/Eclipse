@@ -1,0 +1,18 @@
+﻿@model ErrorsViewModel
+<table id="testCaseSummary" class="table table-striped">
+    <tr>
+        <th>Uri</th>
+        <th>Type</th>
+        <th>Message</th>
+        <th>Stack trace</th>
+    </tr>
+    @foreach (var message in Model.Messages)
+        {
+        <tr>
+            <td>@message.RequestUri</td>
+            <td>@message.SubType</td>
+            <td class="errorMessage">@message.MessageText</td>
+            <td><pre>@message.StackTrace</pre></td>
+        </tr>
+        }
+</table>

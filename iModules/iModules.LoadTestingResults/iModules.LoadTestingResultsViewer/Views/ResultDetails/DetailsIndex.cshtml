@@ -1,0 +1,37 @@
+﻿@model DetailsViewModel
+<h2>General information</h2>
+<table id="generalInfo" class="table borderlessTable">
+    <tr><td>Started:</td><td>@Model.Start</td></tr>
+    <tr><td>Ended:</td><td>@Model.End</td></tr>
+    <tr><td>Duration:</td><td>@Model.Duration minutes</td></tr>
+    <tr class="pass"><td>Passed test runs:</td><td>@Model.TotalPassedTests</td></tr>
+    <tr class="fail"><td>Failed test runs:</td><td>@Model.TotalFailedTests</td></tr>
+</table>
+
+<h2>Test cases summary</h2>
+<table>
+    <table id="testCaseSummary" class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Total runs</th>
+            <th class="pass">Passed runs</th>
+            <th class="fail">Failed runs</th>
+            <th>Duration, seconds</th>
+            <th>Duration Min, seconds</th>
+            <th>Duration Max, seconds</th>
+        </tr>
+        @foreach (var test in Model.TestCases)
+        {
+            <tr>
+                <td>@test.Name</td>
+                <td>@test.Runs</td>
+                <td class="pass">@test.Passed</td>
+                <td class="fail">@test.Failed @if(test.Failed >0){<a href="@Model.GetErrorsLink(test, Model.LoadTestRunId)" class="errorsLink">*</a>}</td>
+                <td>@test.Percentile90.ToString("#.##")</td>
+                <td>@test.Minimum.ToString("#.##")</td>
+                <td>@test.Maximum.ToString("#.##")</td>
+            </tr>
+        }
+    </table>
+</table>
+

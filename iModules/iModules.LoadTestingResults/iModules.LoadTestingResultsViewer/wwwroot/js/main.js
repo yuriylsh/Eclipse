@@ -8,9 +8,16 @@ function initHomePage() {
 var resultsPager = (function pager() {
     var pagerNext = document.getElementById("pagerNext"),
         pagerPrevious = document.getElementById("pagerPrevious"),
+        summary = document.getElementById("pagerSummary"),
         totalCount = 0,
+        totalNumberOfPages = 0,
         page = 0;
-    function setTotal(total) { totalCount = total; }
+
+    function setTotal(total) {
+        totalCount = total;
+        totalNumberOfPages = Math.ceil(total / resultsPageSize);
+    }
+
     function setCurrentPageData(pageNumber, itemsCount) {
         page = pageNumber;
         if (itemsCount === 0 || pageNumber * resultsPageSize >= totalCount) {
@@ -20,7 +27,9 @@ var resultsPager = (function pager() {
         }
 
         pagerPrevious.className = pageNumber === 1 ? "disabled" : "";
+        summary.innerText = "page " + page + " of " + totalNumberOfPages + " (" + totalCount + ")";
     }
+
     return {
         setTotal: setTotal,
         setCurrentPageData: setCurrentPageData,

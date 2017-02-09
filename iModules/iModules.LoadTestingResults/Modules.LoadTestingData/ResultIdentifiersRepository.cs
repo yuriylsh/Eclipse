@@ -27,7 +27,7 @@ namespace Modules.LoadTestingData
                 await connection.OpenAsync();
                 using (var resultsReader = await command.ExecuteReaderAsync())
                 {
-                    while (resultsReader.Read())
+                    while (await resultsReader.ReadAsync())
                     {
                         results.Add(new ResultIdentifier
                         {

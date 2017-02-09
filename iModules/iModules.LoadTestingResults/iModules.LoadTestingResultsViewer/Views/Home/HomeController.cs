@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using iModules.LoadTestingResultsViewer.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Modules.LoadTestingData;
 
-namespace iModules.LoadTestingResultsViewer.Views.Home
+namespace iModules.LoadTestingResultsViewer
 {
     public class HomeController: Controller
     {
@@ -18,21 +19,21 @@ namespace iModules.LoadTestingResultsViewer.Views.Home
         [HttpGet("/")]
         public async Task<ActionResult> Index()
         {
-            return View(new HomeIndexViewModel());
+            return View();
         }
 
         [HttpGet("/GetInitialResults")]
         public async Task<ActionResult> GetInitialResults(int pageIndex, int pageSize)
         {
             var (results, count) = await _resultIdentifiersRepository.GetInitialResultsAsync(pageIndex, pageSize);
-            return Json(new {data = results, itemsCount = count});
+            return Json(new {data = results.Select(ResultIdentifierViewModel.FromResultIdentifier), itemsCount = count});
         }
 
         [HttpGet("/GetResults")]
         public async Task<ActionResult> GetResults(int pageIndex, int pageSize)
         {
             var results = await _resultIdentifiersRepository.GetResultsAsync(pageIndex, pageSize);
-            return Json(results);
+            return Json(results.Select(ResultIdentifierViewModel.FromResultIdentifier));
         }
 
         [HttpPost("/SetResultName")]
