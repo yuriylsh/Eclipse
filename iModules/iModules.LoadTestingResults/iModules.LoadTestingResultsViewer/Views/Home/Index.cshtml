@@ -46,8 +46,14 @@
 </script>
 
     @section BodyEndScripts{
-        <environment Names="Production"><script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script></environment>
+        <environment Names="Production">
+            <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script>
+            <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+        </environment>
         <environment Names="Development">
-        <script src="cdnlibs/jsrender.min.js"></script></environment>
-        <script>initHomePage();</script>
+            <script  type="text/javascript" src="cdnlibs/jsrender.min.js"></script>
+            <script  type="text/javascript" src="cdnlibs/lodash.min.js"></script>
+        </environment>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script  type="text/javascript">initHomePage();</script>
     }

@@ -30,5 +30,11 @@ namespace iModules.LoadTestingResultsViewer
             var vm = new ErrorsViewModel(messages);
             return View(vm);
         }
+
+        [HttpGet("/GetTestData/{id:Guid}")]
+        public async Task<ActionResult> GetTestData(Guid id)
+        {
+            return Json(data: await TestResultDataBuilder.BuildAsync(id, _repository));
+        }
     }
 }

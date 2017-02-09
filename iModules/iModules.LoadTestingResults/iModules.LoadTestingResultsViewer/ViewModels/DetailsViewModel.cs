@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using iModules.LoadTestingData;
 
@@ -18,11 +19,11 @@ namespace iModules.LoadTestingResultsViewer.ViewModels
 
         public int TotalFailedTests { get; set; }
 
-        public IEnumerable<TestCase> TestCases { get; set; }
+        public IEnumerable<TestCase> TestCases { get; set; } = Array.Empty<TestCase>();
 
-        public IEnumerable<PageTiming> PageTimings { get; set; }
+        public IEnumerable<PageTiming> PageTimings { get; set; } = Array.Empty<PageTiming>();
 
-        public IEnumerable<LoadTestCounter> LoadTestCounters { get; set; }
+        public IEnumerable<LoadTestCounter> LoadTestCounters { get; set; } = Array.Empty<LoadTestCounter>();
 
         public static DetailsViewModel FromMetadata(LoadTestMetadata metadata)
         {

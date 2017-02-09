@@ -20,8 +20,14 @@ namespace iModules.LoadTestingData
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-                return await connection.QuerySingleAsync<LoadTestMetadata>(Sql.LoadTestRunMetadata, new {runId = testRunId});
+                await connection.OpenAsync(); try
+                {
+                    return await connection.QuerySingleAsync<LoadTestMetadata>(Sql.LoadTestRunMetadata, new { runId = testRunId });
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
             }
         }
 

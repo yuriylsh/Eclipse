@@ -10,6 +10,7 @@ namespace iModules.LoadTestingResultsViewer
         public static async Task<DetailsViewModel> Build(Guid id, LoadTestRepository repository)
         {
             var metadata = await repository.GetTestMetadataAsync(id);
+            if(metadata == null) return new DetailsViewModel();
             var vm = DetailsViewModel.FromMetadata(metadata);
             var testCases = await repository.GetTestCasesAsync(metadata.LoadTestRunId);
             vm.TotalFailedTests = testCases.TotalFailed;

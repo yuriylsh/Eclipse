@@ -3,9 +3,12 @@
 function initHomePage() {
     populateResultsGrid();
     setupNameEdit();
-    var selected = {};
-    setupAddButtons(selected);
-    setupSelectedGrid(selected);
+    var selected = [];
+    var testSelectionPubSub = $.Callbacks();
+    testSelectionPubSub.add(onTestSelectionChanged);
+    setupAddButtons(selected, testSelectionPubSub);
+    setupSelectedGrid(selected, testSelectionPubSub);
+    google.charts.load("current", { "packages": ["corechart"] });
 }
 
 var resultsPager = (function pager() {
@@ -114,7 +117,11 @@ function setupNameEdit() {
     }
 }
 
-function setupAddButtons(selected) {
+function findTestById(tests, id) {
+    return _.find(tests, function(test) { return test.id === id; });
+}
+
+function setupAddButtons(selected, testSelectionPubSub) {
     var headerRow = document.getElementById("selectedGridHeaderRow"),
         gridRowTemplate = $.templates("#selectedGridRow");
 
@@ -124,10 +131,17 @@ function setupAddButtons(selected) {
         var data = evt.target.dataset,
             id = data["id"],
             name = data["name"];
-        if (!selected[id]) {
+        if (!findTestById(selected, id)) {
             var newRow = { id: id, name: name };
-            selected[id] = newRow;
+            selected.push(newRow);
             appendNewRow(newRow);
+            $.ajax({
+                type: "GET",
+                url: "/GetTestData/" + id
+            }).done(function processTestData(testData) {
+                findTestById(selected, id).testData = testData;
+                testSelectionPubSub.fire(selected);
+            });
         };
     }
 
@@ -137,7 +151,7 @@ function setupAddButtons(selected) {
     }
 }
 
-function setupSelectedGrid(selected) {
+function setupSelectedGrid(selected, testSelectionPubSub) {
     var grid = $("#selectedGrid");
 
     grid.on("click", "button.btnRemove", onRemoveButtonClicked);
@@ -145,9 +159,14 @@ function setupSelectedGrid(selected) {
     function onRemoveButtonClicked(evt) {
         var data = evt.target.dataset,
             id = data["id"];
-        delete selected[id];
+        _.remove(selected, function(test) { return test.id === id; });
         var removeButton = evt.target;
         var row = removeButton.parentNode.parentNode;
         row.remove();
+        testSelectionPubSub.fire(selected);
     }
+}
+
+function onTestSelectionChanged(selected) {
+    
 }
