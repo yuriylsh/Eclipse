@@ -43,5 +43,33 @@ SELECT requestmap.RequestUri,
  WHERE message.LoadTestRunId = @loadTestRunId
 	   AND testcase.TestCaseName = @testCaseName
 ORDER BY RequestUri, SubType";
+
+        public static string PageTimings = @"
+SELECT testcase.TestCaseName, 
+       request.RequestUri, 
+       instance.CumulativeValue	   
+FROM       LoadTestRun AS run
+INNER JOIN LoadTestPerformanceCounterCategory AS category 
+    ON run.LoadTestRunId = category.LoadTestRunId
+INNER JOIN LoadTestPerformanceCounter AS counter 
+    ON category.LoadTestRunId = counter.LoadTestRunId
+    AND category.CounterCategoryId = counter.CounterCategoryId
+INNER JOIN LoadTestPerformanceCounterInstance AS instance 
+    ON counter.CounterId = instance.CounterId
+    AND counter.LoadTestRunId = instance.LoadTestRunId
+LEFT JOIN WebLoadTestRequestMap AS request
+    ON request.LoadTestRunId = instance.LoadTestRunId
+    AND request.RequestId = instance.LoadTestItemId
+LEFT JOIN LoadTestCase As testcase
+    ON request.LoadTestRunId = testcase.LoadTestRunId
+    AND request.TestCaseId = testcase.TestCaseId
+LEFT JOIN LoadTestScenario As scenario
+    ON testcase.LoadTestRunId = scenario.LoadTestRunId
+    AND testcase.ScenarioId = scenario.ScenarioId
+WHERE category.CategoryName = 'LoadTest:Page' and instance.CumulativeValue IS NOT NULL
+	  AND run.LoadTestRunId = @loadTestRunId
+	  AND scenario.ScenarioName IS NOT NULL
+	  AND CounterName = 'Avg. Page Time'
+ORDER BY TestCaseName, request.RequestId";
     }
 }
