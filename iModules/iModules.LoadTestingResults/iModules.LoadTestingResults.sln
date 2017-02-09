@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26127.3
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iModules.LoadTestingResultsViewer", "iModules.LoadTestingResultsViewer\iModules.LoadTestingResultsViewer.csproj", "{D872DFCA-07AE-4EFB-811C-48E8B0211660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.LoadTestingData", "Modules.LoadTestingData\Modules.LoadTestingData.csproj", "{314B7E59-C88B-423B-BC6A-63ABCA4DF62D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iModules.LoadTestingData", "iModules.LoadTestingData\iModules.LoadTestingData.csproj", "{314B7E59-C88B-423B-BC6A-63ABCA4DF62D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
