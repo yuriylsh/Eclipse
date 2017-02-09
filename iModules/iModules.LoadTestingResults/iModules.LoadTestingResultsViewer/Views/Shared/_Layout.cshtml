@@ -16,11 +16,13 @@
 <environment names="Development">
     <script type="text/javascript" src="~/cdnlibs/jquery.min.js"></script>
     <script type="text/javascript" src="~/cdnlibs/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
 </environment>
 <environment names="Production">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="/cdnlibs/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-</environment>
-<script type="text/javascript" src="/js/site.min.js"></script> @await RenderSectionAsync("BodyEndScripts", false)
+    <script type="text/javascript" src="/js/site.min.js"></script>
+</environment >
+    @await RenderSectionAsync("BodyEndScripts", false)
 </body>
 </html>

@@ -174,6 +174,47 @@ function onTestSelectionChanged(selected) {
     }).done(processComparisonData);
 
     function processComparisonData(data) {
-        console.log(data);
+        clearCharts();
+        data.charts.forEach(chartTest);
+    };
+
+    function clearCharts() {
+        var chartsContainer = getChartsContainer();
+        while(chartsContainer.firstChild) {
+            chartsContainer.removeChild(chartsContainer.firstChild);
+        }
     }
+
+    function chartTest(chart) {
+        var data = new google.visualization.DataTable();
+
+        chart.columns.forEach(function addColumnToChart(column) {
+            data.addColumn(column.dataType, column.name);
+        });
+
+        data.addRows(chart.rows);
+
+        var options = {
+            title: chart.title,
+            hAxis: {
+                title: chart.hAxisTitle
+            },
+            vAxis: {
+                title: chart.vAxisTitle
+            },
+            height: "300"
+        };
+
+        var columnChart = new google.visualization.ColumnChart(getElementForChart());
+
+        columnChart.draw(data, options);
+    }
+
+    function getElementForChart() {
+        var chartsContainer = getChartsContainer();
+        chartsContainer.insertAdjacentHTML("beforeend", "<div class='chartContainer'></div>");
+        return chartsContainer.lastElementChild;
+    }
+
+    function getChartsContainer() { return document.getElementById("chartsContainer"); }
 }
