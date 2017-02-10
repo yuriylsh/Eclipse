@@ -131,12 +131,14 @@ function setupAddButtons(selected, testSelectionPubSub) {
         var data = evt.target.dataset,
             id = data["id"],
             name = data["name"];
+        evt.preventDefault();
         if (!findTestById(selected, id)) {
             var newRow = { id: id, name: name };
             selected.push(newRow);
             appendNewRow(newRow);
             testSelectionPubSub.fire(selected);
         };
+        return false;
     }
 
     function appendNewRow(rowData) {
@@ -153,11 +155,13 @@ function setupSelectedGrid(selected, testSelectionPubSub) {
     function onRemoveButtonClicked(evt) {
         var data = evt.target.dataset,
             id = data["id"];
+        evt.preventDefault();
         _.remove(selected, function(test) { return test.id === id; });
         var removeButton = evt.target;
         var row = removeButton.parentNode.parentNode;
         row.remove();
         testSelectionPubSub.fire(selected);
+        return false;
     }
 }
 
