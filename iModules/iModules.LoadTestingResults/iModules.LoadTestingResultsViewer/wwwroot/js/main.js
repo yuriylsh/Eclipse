@@ -166,11 +166,15 @@ function onTestSelectionChanged(selected) {
         function getId(test) {
             return test.id;
         });
+    var names = _.map(selected,
+        function getName(test) {
+            return test.name;
+        });
     $.ajax({
         type: "GET",
         url: "/GetTestData",
         traditional: true,
-        data: { ids: ids }
+        data: { ids: ids, names: names }
     }).done(processComparisonData);
 
     function processComparisonData(data) {
@@ -197,12 +201,13 @@ function onTestSelectionChanged(selected) {
         var options = {
             title: chart.title,
             hAxis: {
-                title: chart.hAxisTitle
+                title: chart.hAxisTitle,
+                slantedText: false
             },
             vAxis: {
                 title: chart.vAxisTitle
             },
-            height: "300"
+            height: "400"
         };
 
         var columnChart = new google.visualization.ColumnChart(getElementForChart());

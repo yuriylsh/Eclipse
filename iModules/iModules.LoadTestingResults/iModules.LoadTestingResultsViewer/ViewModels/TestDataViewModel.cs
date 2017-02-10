@@ -15,7 +15,7 @@ namespace iModules.LoadTestingResultsViewer.ViewModels
 
         public string Title { get; set; }
 
-        public string HAxixTitle { get; set; } = "Pages";
+        public string HAxisTitle { get; set; } = "Pages";
 
         public string VAxisTitle { get; set; } = "Time, seconds";
     }
