@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using iModules.LoadTestingData;
 using iModules.LoadTestingResultsViewer.ViewModels;
@@ -10,7 +11,14 @@ namespace iModules.LoadTestingResultsViewer
     {
         public static async Task<TestDataViewModel> BuildAsync(IEnumerable<Guid> ids, LoadTestRepository repository)
         {
+            var idToLoadTestRunIdMap = await repository.GetLoadTestRunIdsAsync(ids);
+            var loadTestRunIdToPageTimingsMap = await GetPageTimingsAsync(idToLoadTestRunIdMap.Values, repository);
 
+            foreach (var runId in idToLoadTestRunIdMap.Keys)
+            {
+                
+            }
+            
             var chart = new ChartData
             {
                 Columns = new[]
@@ -31,6 +39,17 @@ namespace iModules.LoadTestingResultsViewer
 
             await Task.CompletedTask;
             return new TestDataViewModel{ Charts = new []{chart}};
+        }
+
+        private static async Task<Dictionary<int, IEnumerable<PageTiming>>> GetPageTimingsAsync(IEnumerable<int> loadTestRunIds, LoadTestRepository repository)
+        {
+            var tasks = loadTestRunIds.Select(async loadTestRunId =>
+            {
+                var pageTimings = await repository.GetPageTimingsAsync(loadTestRunId);
+                return (LoadTestRunId: loadTestRunId, PageTimings: pageTimings);
+            });
+            var result = await Task.WhenAll(tasks);
+            return result.ToDictionary(x => x.LoadTestRunId, x => x.PageTimings);
         }
     }
 }

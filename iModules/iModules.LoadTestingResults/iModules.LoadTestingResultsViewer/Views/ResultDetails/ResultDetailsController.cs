@@ -27,7 +27,7 @@ namespace iModules.LoadTestingResultsViewer
         [HttpGet("/Details/Errors")]
         public async Task<ActionResult> Errors(int loadTestRunId, string testCaseName)
         {
-            var messages = await _repository.GetTestRunMessages(loadTestRunId, testCaseName);
+            var messages = await _repository.GetTestRunMessagesAsync(loadTestRunId, testCaseName);
             var vm = new ErrorsViewModel(messages);
             return View(vm);
         }

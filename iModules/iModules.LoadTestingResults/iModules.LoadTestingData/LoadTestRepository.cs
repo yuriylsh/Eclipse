@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data;
+using System.Linq;
 
 namespace iModules.LoadTestingData
 {
@@ -67,7 +68,7 @@ namespace iModules.LoadTestingData
             return result;
         }
 
-        public async Task<IEnumerable<PageTiming>> GetPageTimings(int loadTestRunId)
+        public async Task<IEnumerable<PageTiming>> GetPageTimingsAsync(int loadTestRunId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -76,7 +77,7 @@ namespace iModules.LoadTestingData
             }
         }
 
-        public async Task<IEnumerable<LoadTestCounter>> GetLoadTestCounters(int loadTestRunId)
+        public async Task<IEnumerable<LoadTestCounter>> GetLoadTestCountersAsync(int loadTestRunId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -85,7 +86,7 @@ namespace iModules.LoadTestingData
             }
         }
 
-        public async Task<IEnumerable<TestRunMessage>> GetTestRunMessages(int loadTestRunId, string testCaseName)
+        public async Task<IEnumerable<TestRunMessage>> GetTestRunMessagesAsync(int loadTestRunId, string testCaseName)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -93,5 +94,19 @@ namespace iModules.LoadTestingData
                 return await connection.QueryAsync<TestRunMessage>(Sql.TestCaseErrors, new { loadTestRunId = loadTestRunId, testCaseName = testCaseName });
             }
         }
+
+        public async Task<IDictionary<Guid, int>> GetLoadTestRunIdsAsync(IEnumerable<Guid> runIds)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var map =  await connection.QueryAsync<RunIdAndLoadTestRunIdPair>(Sql.RunIdToLoadTestRunId, new { runIds = runIds });
+                return map.ToDictionary<RunIdAndLoadTestRunIdPair, Guid, int>(GetRunId, GetLoadTestRunId);
+            }
+
+            Guid GetRunId(RunIdAndLoadTestRunIdPair pair) => pair.RunId;
+            int GetLoadTestRunId(RunIdAndLoadTestRunIdPair pair) => pair.LoadTestRunId;
+        }
     }
 }
+;

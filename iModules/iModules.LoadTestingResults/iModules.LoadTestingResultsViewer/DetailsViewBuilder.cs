@@ -16,8 +16,8 @@ namespace iModules.LoadTestingResultsViewer
             vm.TotalFailedTests = testCases.TotalFailed;
             vm.TotalPassedTests = testCases.TotalPassed;
             vm.TestCases = testCases.Cases;
-            vm.PageTimings = await repository.GetPageTimings(metadata.LoadTestRunId);
-            vm.LoadTestCounters = await repository.GetLoadTestCounters(metadata.LoadTestRunId);
+            vm.PageTimings = await repository.GetPageTimingsAsync(metadata.LoadTestRunId);
+            vm.LoadTestCounters = await repository.GetLoadTestCountersAsync(metadata.LoadTestRunId);
 
             return vm;
         }

@@ -86,5 +86,10 @@ INNER JOIN LoadTestPerformanceCounterInstance AS instance
 WHERE instance.cumulativeValue IS NOT NULL
 	  AND category.LoadTestRunId = @loadTestRunId
 	  AND instance.InstanceName = '_Total'";
+
+        public static string RunIdToLoadTestRunId = @"
+SELECT CAST([RunId] AS uniqueidentifier ) as [RunId], [LoadTestRunId]
+  FROM [LoadTest2010].[dbo].[LoadTestRun]
+ WHERE [RunId] IN @runIds";
     }
 }
