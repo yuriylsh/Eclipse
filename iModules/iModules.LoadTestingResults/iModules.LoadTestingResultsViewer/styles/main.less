@@ -48,8 +48,10 @@ ul.pager{
     }
 }      
 
+@passColor: seagreen;
+
 .pass{
-    color:seagreen;
+    color: @passColor;
 }
 
 @failColor: orangered;
@@ -81,4 +83,24 @@ td button.btn{
 #selectedGrid{
     width: auto;
     margin-top: -1em;
+}
+
+.increaseValue{
+    color: @passColor;
+    &:before{
+        content: " (+";
+    }
+    &:after{
+        content: "%)";
+    }
+}
+
+.decreaseValue{
+    color: @failColor;
+    &:before{
+        content: " (-";
+    }
+    &:after{
+        content: "%)";
+    }
 }

@@ -7,15 +7,22 @@ using iModules.LoadTestingResultsViewer.ViewModels;
 
 namespace iModules.LoadTestingResultsViewer
 {
-    public class TestResultDataBuilder
+    public partial class TestResultDataBuilder
     {
         public static async Task<TestDataViewModel> BuildAsync(Guid[] ids, string[] names, LoadTestRepository repository)
         {
             var idToLoadTestRunIdMap = await repository.GetLoadTestRunIdsAsync(ids);
+            var charts = await BuildCharts(ids, names, idToLoadTestRunIdMap, repository);
+            var counters = BuildCountersData(ids, names, idToLoadTestRunIdMap, repository);
+            return new TestDataViewModel{ Charts = charts, Counters = counters};
+        }
+
+        private static async Task<IEnumerable<ChartData>> BuildCharts(Guid[] ids, string[] names, IDictionary<Guid, int> idToLoadTestRunIdMap, LoadTestRepository repository)
+        {
             var loadTestRunIdToPageTimingsMap = await GetPageTimingsAsync(idToLoadTestRunIdMap.Values, repository);
             var chartBuilders = new List<ChartDataBuilder>();
 
-            for(var i = 0; i < ids.Length; i++)
+            for (var i = 0; i < ids.Length; i++)
             {
                 var runId = ids[i];
                 var runName = names[i];
@@ -27,10 +34,9 @@ namespace iModules.LoadTestingResultsViewer
                     var chartBuilder = GetChartBuilderForTestCase(chartBuilders, testCase.Key);
                     chartBuilder.AppendDataPoint(runName, testCase.ToArray());
                 }
-
             }
-            
-            return new TestDataViewModel{ Charts = chartBuilders.Select(builder => builder.Build())};
+
+            return chartBuilders.Select(builder => builder.Build());
         }
 
         private static async Task<Dictionary<int, IEnumerable<PageTiming>>> GetPageTimingsAsync(IEnumerable<int> loadTestRunIds, LoadTestRepository repository)
@@ -56,97 +62,68 @@ namespace iModules.LoadTestingResultsViewer
             existingCharts.Add(newChartBuilder);
             return newChartBuilder;
         }
-    }
 
-    internal class ChartDataBuilder
-    {
-        private readonly ChartData _chartData;
-        private readonly List<Column> _columns = new List<Column>();
-        private readonly Dictionary<string, List<object>> _rows = new Dictionary<string, List<object>>(StringComparer.OrdinalIgnoreCase);
-
-        public ChartDataBuilder(string testCaseName)
+        private static async Task<object> BuildCountersData(Guid[] ids, string[] names, IDictionary<Guid, int> idToLoadTestRunIdMap,
+            LoadTestRepository repository)
         {
-            _chartData = new ChartData
+            IEnumerable<LoadTestCounter>[] testCounters = await GetCountersAsync(ids, idToLoadTestRunIdMap, repository);
+
+            var headers = new List<ComparisonGridHeader>(names.Select(name => new ComparisonGridHeader {Header = name}));
+            headers.Insert(0, new ComparisonGridHeader{Header = "Counter"});
+
+            var seedCounters = testCounters[0];
+            var rows = seedCounters.ToDictionary(counter => counter.CounterName, counter => new List<ComparisonGridCell>(ids.Length));
+
+            var result = new
             {
-                Title = testCaseName,
-                HAxisTitle = DefaultHorizontalAxisTitle,
-                VAxisTitle = DefaultVerticalAxisTitle
-            };
-            _columns.Add(new Column("string", "Page Uri"));
-        }
-
-        public ChartData Build()
-        {
-            _chartData.Columns = _columns;
-            _chartData.Rows = BuildRows().ToArray();
-            return _chartData;
-        }
-
-        private IEnumerable<object[]> BuildRows()
-        {
-            foreach (var row in _rows)
-            {
-                row.Value.Insert(0, row.Key);
-                yield return row.Value.ToArray();
-            }
-        }
-
-        public bool IsForTestCase(string testCaseName)
-            => _chartData.Title.Equals(testCaseName, StringComparison.OrdinalIgnoreCase);
-
-        private const string DefaultHorizontalAxisTitle = "Pages";
-        private const string DefaultVerticalAxisTitle = "Time, seconds";
-
-        public void AppendDataPoint(string columnName, PageTiming[] timings )
-        {
-            _columns.Add(new Column("number", columnName));
-            AppendRows(timings);
-        }
-
-        private void AppendRows(PageTiming[] timings)
-        {
-            AppendValuesToExistingRowsMatchingTimings(timings);
-
-            AppendNullToExistingRowsUnmatchingTimings(timings);
-
-            AddNewRowsFromUnmatchedTimings(timings);
-        }
-
-        private void AppendValuesToExistingRowsMatchingTimings(PageTiming[] timings)
-        {
-            foreach (var pageTiming in timings)
-            {
-                var existingRow = _rows.TryGetValue(pageTiming.RequestUri, out List<object> values) ? values : null;
-                existingRow?.Add(pageTiming.CumulativeValue);
-            }
-        }
-
-        private void AppendNullToExistingRowsUnmatchingTimings(PageTiming[] timings)
-        {
-            foreach (var row in _rows)
-            {
-                if (!timings.Any(t => t.RequestUri.Equals(row.Key, StringComparison.OrdinalIgnoreCase)))
+                headers = new[] { new {header = "Counter"}}.Concat(names.Select(name => new { header = name})),
+                rows2 = new []
                 {
-                    row.Value.Add(null);
-                }
-            }
-        }
-
-
-        private void AddNewRowsFromUnmatchedTimings(PageTiming[] timings)
-        {
-            foreach (var pageTiming in timings)
-            {
-                bool rowExists = _rows.ContainsKey(pageTiming.RequestUri);
-                if (!rowExists)
-                {
-                    var valuesForPreviousRuns = Enumerable.Repeat<object>(null, _columns.Count - 2); //skip 1 column for the page uri, one for current value
-                    _rows.Add(pageTiming.RequestUri, new List<object>(valuesForPreviousRuns)
+                    new
                     {
-                        pageTiming.CumulativeValue
-                    });
+                        cells = new object[]
+                        {
+                            new ComparisonGridCell{Value = testCounters[0].},
+                            new ComparisonGridCell{Value = "1"},
+                            new ComparisonGridCell{Value = "1.2", DecreaseValue = "20"},
+                        }
+                    }
                 }
+                rows = new[]
+                {
+                    new
+                    {
+                        cells = new object[]
+                        {
+                            new ComparisonGridCell{Value = "Avg. Disk Queue Length"},
+                            new ComparisonGridCell{Value = "1"},
+                            new ComparisonGridCell{Value = "1.2", DecreaseValue = "20"},
+                        }
+                    },
+                    new
+                    {
+                        cells = new object[]
+                        {
+                            new ComparisonGridCell{Value = "Avg. Transaction Time"},
+                            new ComparisonGridCell{Value = "4"},
+                            new ComparisonGridCell{Value = "2", IncreaseValue = "50"},
+                        }
+                    },
+                }
+            };
+
+            return result;
+        }
+
+        private static async Task<IEnumerable<LoadTestCounter>[]> GetCountersAsync(Guid[] ids, IDictionary<Guid, int> idToLoadTestRunIdMap, LoadTestRepository repository)
+        {
+            var result = new IEnumerable<LoadTestCounter>[ids.Length];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                int loadTestRunId = idToLoadTestRunIdMap[ids[i]];
+                result[i] = await repository.GetLoadTestCountersAsync(loadTestRunId);
             }
+            return result;
         }
     }
 }

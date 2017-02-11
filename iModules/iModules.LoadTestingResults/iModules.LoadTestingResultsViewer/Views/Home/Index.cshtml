@@ -50,14 +50,14 @@
     <tr>
         {{for cells}}
             <td>
-                {{:value}}{{if increaseValue}}<span class="increaseCounter">{{:increaseValue}}</span>{{/if}}{{if decreaseValue}}<span class="decreaseCounter">{{:decreaseValue}}</span>{{/if}}
+                {{:value}}{{if increaseValue}}<span class="increaseValue">{{:increaseValue}}</span>{{/if}}{{if decreaseValue}}<span class="decreaseValue">{{:decreaseValue}}</span>{{/if}}
             </td>
         {{/for}}
     </tr>
 </script>
 
 <script id="countersGrid" type="text/x-jsrender">
-    <table id="selectedGrid" class="table table-hover borderlessTable">
+    <table id="selectedGrid" class="table table-hover">
        <tr>
            {{for headers}}
            <td>{{:header}}</td>

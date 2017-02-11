@@ -5,6 +5,7 @@ namespace iModules.LoadTestingResultsViewer.ViewModels
     public class TestDataViewModel
     {
         public IEnumerable<ChartData> Charts { get; set; }
+        public object Counters { get; set; }
     }
 
     public class ChartData

@@ -66,3 +66,21 @@ td button.btn {
   width: auto;
   margin-top: -1em;
 }
+.increaseValue {
+  color: seagreen;
+}
+.increaseValue:before {
+  content: " (+";
+}
+.increaseValue:after {
+  content: "%)";
+}
+.decreaseValue {
+  color: orangered;
+}
+.decreaseValue:before {
+  content: " (-";
+}
+.decreaseValue:after {
+  content: "%)";
+}
