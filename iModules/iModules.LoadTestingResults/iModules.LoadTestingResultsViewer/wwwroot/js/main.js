@@ -174,16 +174,19 @@ function onTestSelectionChanged(selected) {
         function getName(test) {
             return test.name;
         });
-    $.ajax({
-        type: "GET",
-        url: "/GetTestData",
-        traditional: true,
-        data: { ids: ids, names: names }
-    }).done(processComparisonData);
+    clearCharts();
+    if (ids.length > 1) {
+        $.ajax({
+            type: "GET",
+            url: "/GetTestData",
+            traditional: true,
+            data: { ids: ids, names: names }
+        }).done(processComparisonData);
+    } 
 
     function processComparisonData(data) {
-        clearCharts();
         data.charts.forEach(chartTest);
+        appendCountersTable(data.counters);
     };
 
     function clearCharts() {
@@ -226,4 +229,11 @@ function onTestSelectionChanged(selected) {
     }
 
     function getChartsContainer() { return document.getElementById("chartsContainer"); }
+
+    function appendCountersTable(countersData) {
+        var template = $.templates("#countersGrid");
+        var html = template.render(countersData);
+        var chartsContainer = getChartsContainer();
+        chartsContainer.insertAdjacentHTML("beforeend", html);
+    }
 }

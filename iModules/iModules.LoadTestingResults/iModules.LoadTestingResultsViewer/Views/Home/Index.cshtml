@@ -42,12 +42,34 @@
 <script id="selectedGridRow" type="text/x-jsrender">
     <tr>
         <td>{{:name}}</td>
-        <td><button type="button" class="btn btn-primary btnBaseline" data-id="{{:id}}">Set as baseline</button></td>
         <td><button type="button" class="btn btn-primary btn-danger btnRemove" data-id="{{:id}}">Remove</button></td>
     </tr>
 </script>
 
-    @section BodyEndScripts{
+<script id="countersGridRow" type="text/x-jsrender">
+    <tr>
+        {{for cells}}
+            <td>
+                {{:value}}{{if increaseValue}}<span class="increaseCounter">{{:increaseValue}}</span>{{/if}}{{if decreaseValue}}<span class="decreaseCounter">{{:decreaseValue}}</span>{{/if}}
+            </td>
+        {{/for}}
+    </tr>
+</script>
+
+<script id="countersGrid" type="text/x-jsrender">
+    <table id="selectedGrid" class="table table-hover borderlessTable">
+       <tr>
+           {{for headers}}
+           <td>{{:header}}</td>
+           {{/for}}
+       </tr>
+       {{for rows}}
+        {{include tmpl="#countersGridRow"/}}
+       {{/for}}
+    </table> 
+</script>
+
+@section BodyEndScripts{
         <environment Names="Production">
             <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.83/jsrender.min.js"></script>
             <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
