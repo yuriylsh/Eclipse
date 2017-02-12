@@ -17,7 +17,7 @@ namespace iModules.LoadTestingResultsViewer
         }
 
         [HttpGet("/")]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             return View();
         }
