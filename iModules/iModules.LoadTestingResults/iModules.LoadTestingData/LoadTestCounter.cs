@@ -9,5 +9,7 @@
         public double CumulativeValue { get; set; }
 
         public bool HigherIsBetter { get; set; }
+
+        public string GetFullCounterName() => string.Concat(CategoryName, ": ", CounterName);
     }
 }

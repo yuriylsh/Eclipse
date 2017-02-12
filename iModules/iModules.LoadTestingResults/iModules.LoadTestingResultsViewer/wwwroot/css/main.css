@@ -73,7 +73,7 @@ td button.btn {
   content: " (+";
 }
 .increaseValue:after {
-  content: "%)";
+  content: ")";
 }
 .decreaseValue {
   color: orangered;
@@ -82,5 +82,5 @@ td button.btn {
   content: " (-";
 }
 .decreaseValue:after {
-  content: "%)";
+  content: ")";
 }

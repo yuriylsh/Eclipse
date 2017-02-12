@@ -7,13 +7,13 @@ using iModules.LoadTestingResultsViewer.ViewModels;
 
 namespace iModules.LoadTestingResultsViewer
 {
-    public partial class TestResultDataBuilder
+    public class TestResultDataBuilder
     {
         public static async Task<TestDataViewModel> BuildAsync(Guid[] ids, string[] names, LoadTestRepository repository)
         {
             var idToLoadTestRunIdMap = await repository.GetLoadTestRunIdsAsync(ids);
             var charts = await BuildCharts(ids, names, idToLoadTestRunIdMap, repository);
-            var counters = BuildCountersData(ids, names, idToLoadTestRunIdMap, repository);
+            var counters = await BuildCountersData(ids, names, idToLoadTestRunIdMap, repository);
             return new TestDataViewModel{ Charts = charts, Counters = counters};
         }
 
@@ -63,7 +63,7 @@ namespace iModules.LoadTestingResultsViewer
             return newChartBuilder;
         }
 
-        private static async Task<object> BuildCountersData(Guid[] ids, string[] names, IDictionary<Guid, int> idToLoadTestRunIdMap,
+        private static async Task<ComparisonGrid> BuildCountersData(Guid[] ids, string[] names, IDictionary<Guid, int> idToLoadTestRunIdMap,
             LoadTestRepository repository)
         {
             IEnumerable<LoadTestCounter>[] testCounters = await GetCountersAsync(ids, idToLoadTestRunIdMap, repository);
@@ -72,47 +72,74 @@ namespace iModules.LoadTestingResultsViewer
             headers.Insert(0, new ComparisonGridHeader{Header = "Counter"});
 
             var seedCounters = testCounters[0];
-            var rows = seedCounters.ToDictionary(counter => counter.CounterName, counter => new List<ComparisonGridCell>(ids.Length));
-
-            var result = new
+            var rows = new Dictionary<string, List<ComparisonGridCell>>();
+            foreach (var counter in seedCounters)
             {
-                headers = new[] { new {header = "Counter"}}.Concat(names.Select(name => new { header = name})),
-                rows2 = new []
+                rows[counter.GetFullCounterName()] = new List<ComparisonGridCell>(ids.Length);
+            }
+
+            for (int i = 0; i < ids.Length; i++)
+            {
+                bool isBaseline = i == 0;
+                foreach (var counter in testCounters[i])
                 {
-                    new
+                    if(rows.TryGetValue(counter.GetFullCounterName(), out List<ComparisonGridCell> cells))
                     {
-                        cells = new object[]
+                        if (isBaseline)
                         {
-                            new ComparisonGridCell{Value = testCounters[0].},
-                            new ComparisonGridCell{Value = "1"},
-                            new ComparisonGridCell{Value = "1.2", DecreaseValue = "20"},
+                            cells.Add(new ComparisonGridCell {Value = counter.CumulativeValue.ToString("0.####")});
+                        }
+                        else
+                        {
+                            cells.Add(GetNonBaselineCounterValue(counter, testCounters[0].First(baseline => baseline.GetFullCounterName() == counter.GetFullCounterName())));
                         }
                     }
                 }
-                rows = new[]
-                {
-                    new
-                    {
-                        cells = new object[]
-                        {
-                            new ComparisonGridCell{Value = "Avg. Disk Queue Length"},
-                            new ComparisonGridCell{Value = "1"},
-                            new ComparisonGridCell{Value = "1.2", DecreaseValue = "20"},
-                        }
-                    },
-                    new
-                    {
-                        cells = new object[]
-                        {
-                            new ComparisonGridCell{Value = "Avg. Transaction Time"},
-                            new ComparisonGridCell{Value = "4"},
-                            new ComparisonGridCell{Value = "2", IncreaseValue = "50"},
-                        }
-                    },
-                }
+            }
+
+            foreach (var row in rows)
+            {
+                row.Value.Insert(0, new ComparisonGridCell {Value = row.Key});
+            }
+
+            var result = new ComparisonGrid
+            {
+                Headers = headers,
+                Rows = seedCounters
+                        .Select(counter => counter.GetFullCounterName())
+                        .Select(counterName => new ComparisonGridRow { Cells = rows[counterName]})
             };
 
             return result;
+        }
+
+        private static ComparisonGridCell GetNonBaselineCounterValue(LoadTestCounter counter, LoadTestCounter baseline)
+        {
+            var cell = new ComparisonGridCell {Value = counter.CumulativeValue.ToString("0.####")};
+            bool valueIsGreaterThanBaseline = counter.CumulativeValue > baseline.CumulativeValue;
+            if (counter.HigherIsBetter)
+            {
+                if (valueIsGreaterThanBaseline)
+                    cell.IncreaseValue = GetAbsolutePercentageValue(counter.CumulativeValue, baseline.CumulativeValue);
+                else
+                    cell.DecreaseValue = GetAbsolutePercentageValue(counter.CumulativeValue, baseline.CumulativeValue);
+            }
+            else
+            {
+                if (valueIsGreaterThanBaseline)
+                    cell.DecreaseValue = GetAbsolutePercentageValue(counter.CumulativeValue, baseline.CumulativeValue);
+                else
+                    cell.IncreaseValue = GetAbsolutePercentageValue(counter.CumulativeValue, baseline.CumulativeValue);
+            }
+            return cell;
+        }
+
+        private static string GetAbsolutePercentageValue(double x, double y)
+        {
+            if (Math.Abs(x - y) < 0.0000001) return null;
+            var ratio = x / y;
+            var percentage = ratio > 1 ? ratio - 1 : 1 - ratio;
+            return percentage.ToString("P");
         }
 
         private static async Task<IEnumerable<LoadTestCounter>[]> GetCountersAsync(Guid[] ids, IDictionary<Guid, int> idToLoadTestRunIdMap, LoadTestRepository repository)
