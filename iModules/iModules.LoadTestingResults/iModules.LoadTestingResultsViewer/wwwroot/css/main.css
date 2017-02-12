@@ -66,6 +66,9 @@ td button.btn {
   width: auto;
   margin-top: -1em;
 }
+#selectedGrid tbody tr:first-child {
+  font-weight: bold;
+}
 .increaseValue {
   color: seagreen;
 }
