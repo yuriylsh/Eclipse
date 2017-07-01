@@ -4,56 +4,55 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using static System.Console;
 
 namespace Olo
 {
-    static class Program
+    internal static class Program
     {
-        private static readonly IEqualityComparer<Order> OrderComparer = new OrdersByToppingsComparer();
-
-        static void Main()
+        private static void Main()
         {
             // skipping all error handling and edge cases for brevity
             var orders = GetOrders().Result;
-            var rankedOrders = RankOrders(orders);
-            DisplayTop(rankedOrders, 20);
+            var toppingsCount = CountToppings(orders);
+            DisplayTop(toppingsCount, 20);
 
             async Task<Order[]> GetOrders() => JsonConvert.DeserializeObject<Order[]>(
                 await new HttpClient().GetStringAsync("http://files.olo.com/pizzas.json"));
         }
 
-        private static IReadOnlyDictionary<Order, int> RankOrders(IEnumerable<Order> orders)
+        private static IReadOnlyDictionary<Order, int> CountToppings(IEnumerable<Order> orders)
         {
-            var result = new Dictionary<Order, int>(OrderComparer);
+            var topppingsCount = new Dictionary<Order, int>(new OrdersByToppingsComparer());
             foreach (var order in orders)
             {
-                if (result.TryGetValue(order, out int currentRank))
+                if (topppingsCount.TryGetValue(order, out int currentCount))
                 {
-                    result[order] = currentRank + 1;
+                    topppingsCount[order] = currentCount + 1;
                 }
                 else
                 {
-                    result[order] = 1;
+                    topppingsCount[order] = 1;
                 }
             }
-            return result;
+            return topppingsCount;
         }
 
-        private static void DisplayTop(IReadOnlyDictionary<Order, int> rankedOrders, int topCount)
+        private static void DisplayTop(IReadOnlyDictionary<Order, int> toppingsCount, int limit)
         {
-            var top = rankedOrders.OrderByDescending(GetOccurancesCount).Take(topCount);
+            var top = toppingsCount.OrderByDescending(GetOccurancesCount).Take(limit);
             var rank = 0;
             foreach (var (order, count) in top)
             {
-                Console.WriteLine($"Combination #{++rank} ({count} {(count > 1 ? "entries" : "entry")}):");
+                WriteLine($"Combination ranked #{++rank} ({count} {(count > 1 ? "entries" : "entry")}):");
                 foreach (var topping in order.Toppings)
                 {
-                    Console.WriteLine("\t" + topping);
+                    WriteLine("\t" + topping);
                 }
             }
-        }
 
-        private static int GetOccurancesCount(KeyValuePair<Order, int> kvp) => kvp.Value;
+            int GetOccurancesCount(KeyValuePair<Order, int> kvp) => kvp.Value;
+        }
 
         public static void Deconstruct(this KeyValuePair<Order, int> kvp, out Order order, out int count)
         {
