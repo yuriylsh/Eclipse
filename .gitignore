@@ -86,3 +86,24 @@ artifacts/
 *.userprefs
 *DS_Store
 *.sln.ide
+
+#scala from 
+*.class
+*.log
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+project/target/
+
+# Scala-IDE specific
+.scala_dependencies
+#.worksheet
+.idea
