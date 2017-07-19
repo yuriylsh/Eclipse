@@ -1,3 +1,5 @@
+import java.math.BigInteger
+
 var capital = Map("US" -> "Washington", "France" -> "Paris")
 capital += ("Japan" -> "Tokyo")
 capital("France")
@@ -22,4 +24,22 @@ max(3, 5)
 
 def max2(x: Int, y: Int) = if (x > y) x else y
 max2(3, 5)
+
+var big = new BigInteger("123456789123456789123456789")
+
+val greetStrings = new Array[String](3)
+greetStrings(0) = "Hello"
+greetStrings(1) = ", "
+greetStrings(2) = "world! \n"
+for(i <- 0 to 2 ) // same as 0.to(2)
+  print(greetStrings(i)) // greetString(i) is the same as greetString.apply(i)
+
+val numNames = Array("zero", "one", "two")
+
+val oneTwo = List(1, 2)
+val threeFour = List(3, 4)
+val oneTwoThreeFour = oneTwo ::: threeFour
+oneTwo + " and " + threeFour + " were not mutated."
+"Thus, " + oneTwoThreeFour + " is a new list."
+
 
