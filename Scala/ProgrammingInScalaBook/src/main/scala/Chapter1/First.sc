@@ -35,11 +35,3 @@ for(i <- 0 to 2 ) // same as 0.to(2)
   print(greetStrings(i)) // greetString(i) is the same as greetString.apply(i)
 
 val numNames = Array("zero", "one", "two")
-
-val oneTwo = List(1, 2)
-val threeFour = List(3, 4)
-val oneTwoThreeFour = oneTwo ::: threeFour
-oneTwo + " and " + threeFour + " were not mutated."
-"Thus, " + oneTwoThreeFour + " is a new list."
-
-
