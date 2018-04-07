@@ -122,6 +122,8 @@ GameObject:
   m_Component:
   - component: {fileID: 440170024}
   - component: {fileID: 440170023}
+  - component: {fileID: 440170025}
+  - component: {fileID: 440170026}
   m_Layer: 0
   m_Name: Bunny
   m_TagString: Untagged
@@ -186,6 +188,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &440170025
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 440170022}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &440170026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 440170022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee26962aeec166a41932ca13498d87d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &542513607
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +228,7 @@ GameObject:
   m_Component:
   - component: {fileID: 542513609}
   - component: {fileID: 542513608}
+  - component: {fileID: 542513610}
   m_Layer: 0
   m_Name: TeaddyBearGreen
   m_TagString: Untagged
@@ -259,6 +293,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &542513610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 542513607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc497fba8bc64a49b5c2cb9b3cc12eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &969051381
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,8 +313,9 @@ GameObject:
   m_Component:
   - component: {fileID: 969051383}
   - component: {fileID: 969051382}
+  - component: {fileID: 969051384}
   m_Layer: 0
-  m_Name: TeaddyBearRed
+  m_Name: TeaddyBearPurple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -332,6 +378,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &969051384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969051381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc497fba8bc64a49b5c2cb9b3cc12eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1718372783
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,6 +398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1718372785}
   - component: {fileID: 1718372784}
+  - component: {fileID: 1718372786}
   m_Layer: 0
   m_Name: TeaddyBearYellow
   m_TagString: Untagged
@@ -405,6 +463,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1718372786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1718372783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc497fba8bc64a49b5c2cb9b3cc12eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2058762641
 GameObject:
   m_ObjectHideFlags: 0
