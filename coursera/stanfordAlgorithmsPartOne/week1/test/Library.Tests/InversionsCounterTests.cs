@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Inversions;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Tests
     {
         public AssertionData(string filePath, long numberOfInversions)
         {
-            FilePath = filePath;
+            FilePath = GetInputPath(filePath);
             NumberOfInversions = numberOfInversions;
         }
 
@@ -20,6 +21,13 @@ namespace Tests
             var parts = str.Split(',');
             return new AssertionData(parts[0], long.Parse(parts[1]));
         }
+        
+        private static string GetInputPath(string fileName) => Path.Combine(CurrentDirectoryPath, fileName);
+
+        private static string CurrentDirectoryPath => _currentDirectoryPath 
+                                                      ?? (_currentDirectoryPath = Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(Assembly.GetExecutingAssembly().CodeBase).Path)));
+
+        private static string _currentDirectoryPath; 
     }
 
     public class InversionsCounterTest

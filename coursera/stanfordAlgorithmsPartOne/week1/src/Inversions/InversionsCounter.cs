@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Inversions
+﻿namespace Inversions
 {
     public class InversionsCounter
     {
@@ -13,29 +11,29 @@ namespace Inversions
             return CountInversionsAndSortInput(input).NumberOfInversions;
         }
 
-        private CountedInversionsAndSortedInput CountInversionsAndSortInput(int[] input)
+        private (uint NumberOfInversions, int[] SortedInput) CountInversionsAndSortInput(int[] input)
         {
             if (input.Length == 1)
             {
-                return new Inversions.CountedInversionsAndSortedInput(0, input);
+                return (0, input);
             }
             var halves = new SplittedInHalfArrays(input);
             var leftInversionsAndSortedInput = CountInversionsAndSortInput(halves.Left);
             var rightInversionsAndSortedInput = CountInversionsAndSortInput(halves.Right);
             var splitInversionsAndSortedResult = MergeHalvesAndCountSplitInversions(leftInversionsAndSortedInput.SortedInput, rightInversionsAndSortedInput.SortedInput);
-            long totalInversions =
+            var totalInversions =
                 leftInversionsAndSortedInput.NumberOfInversions
                 + rightInversionsAndSortedInput.NumberOfInversions
                 + splitInversionsAndSortedResult.NumberOfInversions;
-            return new CountedInversionsAndSortedInput(totalInversions, splitInversionsAndSortedResult.SortedInput);
+            return (totalInversions, splitInversionsAndSortedResult.SortedInput);
         }
 
-        private CountedInversionsAndSortedInput MergeHalvesAndCountSplitInversions(int[] left, int[] right)
+        private (uint NumberOfInversions, int[] SortedInput) MergeHalvesAndCountSplitInversions(int[] left, int[] right)
         {
             var sortedInput = new SortedInput(left, right);
-            long numberOfSplitInversions = 0;
+            uint numberOfSplitInversions = 0;
             int rightIndex = 0;
-            for (int leftIndex = 0; leftIndex < left.Length; leftIndex++)
+            for (uint leftIndex = 0; leftIndex < left.Length; leftIndex++)
             {
                 int currentLeft = left[leftIndex];
                 bool rightHasItems = rightIndex < right.Length;
@@ -45,12 +43,12 @@ namespace Inversions
                 }
                 else
                 {
-                    int numberOfUnmergedItemsInLeft = left.Length - leftIndex;
+                    uint numberOfUnmergedItemsInLeft = (uint)left.Length - leftIndex;
                     AddRightItemsToMergeResultWhenInverted(right, ref rightIndex, sortedInput, currentLeft, numberOfUnmergedItemsInLeft, ref numberOfSplitInversions);
                 }
             }
             CopyRestOfRightToMergedResult(right, rightIndex, sortedInput);
-            return new CountedInversionsAndSortedInput(numberOfSplitInversions, sortedInput.Result);
+            return (numberOfSplitInversions, sortedInput.Result);
         }
 
         private void CopyRestOfRightToMergedResult(int[] right, int rightIndex, SortedInput mergedResult)
@@ -62,7 +60,7 @@ namespace Inversions
             }
         }
 
-        private void AddRightItemsToMergeResultWhenInverted(int[] right, ref int rightIndex, SortedInput mergedResult, int currentLeft, int numberOfUnmergedItemsInLeft, ref long numberOfSplitInversions)
+        private void AddRightItemsToMergeResultWhenInverted(int[] right, ref int rightIndex, SortedInput mergedResult, int currentLeft, uint numberOfUnmergedItemsInLeft, ref uint numberOfSplitInversions)
         {
             int currentRight = right[rightIndex];
             if (currentLeft < currentRight)
