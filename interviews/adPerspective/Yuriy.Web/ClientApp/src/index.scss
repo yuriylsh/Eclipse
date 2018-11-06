@@ -1,0 +1,11 @@
+div{
+    &.root{
+        background-color: lightgray;
+    }
+    &.child1{
+        background-color: lightgreen;
+    }
+    &.child2{
+        background-color: lightyellow;
+    }
+}
