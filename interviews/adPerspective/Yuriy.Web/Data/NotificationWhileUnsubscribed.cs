@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Yuriy.Core.Model;
 
 namespace Yuriy.Web.Data
 {
-    public partial class NotificationWhileUnsubscribed
+    public partial class NotificationWhileUnsubscribed : INotificationWhileUnsubscribed
     {
         public int Id { get; set; }
         public int User { get; set; }

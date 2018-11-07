@@ -74,9 +74,9 @@ namespace Yuriy.Web.Data
         private void SeedData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<NotificationType>().HasData(
-                new NotificationType { Id = (int)NotificationTypes.NewComment, Name = "New Comment" },
-                new NotificationType { Id = (int)NotificationTypes.CampaignStatusChanged, Name = "Campaign Status Changed " },
-                new NotificationType { Id = (int)NotificationTypes.NewReportAvailable, Name = "New Report Available" }
+                new NotificationType { Id = 1, Name = "New Comment" },
+                new NotificationType { Id = 2, Name = "Campaign Status Changed " },
+                new NotificationType { Id = 3, Name = "New Report Available" }
             );
 
             // I know very well that storing user passwords in plain text
