@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yuriy.Web.Data;
 
 namespace Yuriy.Web.Migrations
 {
     [DbContext(typeof(AdPerspectiveContext))]
-    partial class AdPerspectiveContextModelSnapshot : ModelSnapshot
+    [Migration("20181107032400_SeedingUserAndNotificationTypeData")]
+    partial class SeedingUserAndNotificationTypeData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

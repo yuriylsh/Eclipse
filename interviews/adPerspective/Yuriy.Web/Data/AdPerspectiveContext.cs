@@ -73,7 +73,19 @@ namespace Yuriy.Web.Data
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.Entity<NotificationType>().HasData(
+                new NotificationType { Id = (int)NotificationTypes.NewComment, Name = "New Comment" },
+                new NotificationType { Id = (int)NotificationTypes.CampaignStatusChanged, Name = "Campaign Status Changed " },
+                new NotificationType { Id = (int)NotificationTypes.NewReportAvailable, Name = "New Report Available" }
+            );
+
+            // I know very well that storing user passwords in plain text
+            // instead of a hashed value in database is a big NO-NO in real software,
+            // but I decided it is acceptable for this mock situation.
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, FirstName = "William", LastName = "Brown", Password = "WilliamPassword" },
+                new User { Id = 2, FirstName = "Kyle", LastName = "Burnham", Password = "KylePassword" }
+            );
         }
     }
 }
