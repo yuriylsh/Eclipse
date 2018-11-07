@@ -6,6 +6,10 @@ namespace Yuriy.Web.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Password",
+                table: "User");
+
             migrationBuilder.InsertData(
                 table: "NotificationType",
                 columns: new[] { "Id", "Name" },
@@ -18,11 +22,11 @@ namespace Yuriy.Web.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "FirstName", "LastName", "Password" },
+                columns: new[] { "Id", "FirstName", "LastName" },
                 values: new object[,]
                 {
-                    { 1, "William", "Brown", "WilliamPassword" },
-                    { 2, "Kyle", "Burnham", "KylePassword" }
+                    { 1, "William", "Brown" },
+                    { 2, "Kyle", "Burnham" }
                 });
         }
 
@@ -52,6 +56,13 @@ namespace Yuriy.Web.Migrations
                 table: "User",
                 keyColumn: "Id",
                 keyValue: 2);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Password",
+                table: "User",
+                maxLength: 50,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

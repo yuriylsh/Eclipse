@@ -21,9 +21,6 @@ namespace Yuriy.Web.Data
         [Required]
         [StringLength(100)]
         public string LastName { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string Password { get; set; }
 
         [InverseProperty("UserNavigation")]
         public ICollection<Notification> Notification { get; set; }

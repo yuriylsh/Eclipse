@@ -10,7 +10,7 @@ using Yuriy.Web.Data;
 namespace Yuriy.Web.Migrations
 {
     [DbContext(typeof(AdPerspectiveContext))]
-    [Migration("20181107032400_SeedingUserAndNotificationTypeData")]
+    [Migration("20181107130320_SeedingUserAndNotificationTypeData")]
     partial class SeedingUserAndNotificationTypeData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,17 +127,13 @@ namespace Yuriy.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
                     b.HasKey("Id");
 
                     b.ToTable("User");
 
                     b.HasData(
-                        new { Id = 1, FirstName = "William", LastName = "Brown", Password = "WilliamPassword" },
-                        new { Id = 2, FirstName = "Kyle", LastName = "Burnham", Password = "KylePassword" }
+                        new { Id = 1, FirstName = "William", LastName = "Brown" },
+                        new { Id = 2, FirstName = "Kyle", LastName = "Burnham" }
                     );
                 });
 

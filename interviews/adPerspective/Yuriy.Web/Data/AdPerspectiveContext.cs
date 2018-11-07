@@ -77,13 +77,9 @@ namespace Yuriy.Web.Data
                 new NotificationType { Id = 2, Name = "Campaign Status Changed " },
                 new NotificationType { Id = 3, Name = "New Report Available" }
             );
-
-            // I know very well that storing user passwords in plain text
-            // instead of a hashed value in database is a big NO-NO in real software,
-            // but I decided it is acceptable for this mock situation.
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, FirstName = "William", LastName = "Brown", Password = "WilliamPassword" },
-                new User { Id = 2, FirstName = "Kyle", LastName = "Burnham", Password = "KylePassword" }
+                new User { Id = 1, FirstName = "William", LastName = "Brown" },
+                new User { Id = 2, FirstName = "Kyle", LastName = "Burnham" }
             );
         }
     }
