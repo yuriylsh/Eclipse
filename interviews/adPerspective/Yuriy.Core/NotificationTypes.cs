@@ -1,6 +1,6 @@
 ﻿namespace Yuriy.Core
 {
-    public enum NotificationType
+    public enum NotificationTypes
     {
         NewComment = 1,
 

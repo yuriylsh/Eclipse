@@ -10,7 +10,7 @@ using Yuriy.Web.Data;
 namespace Yuriy.Web.Migrations
 {
     [DbContext(typeof(AdPerspectiveContext))]
-    [Migration("20181107021139_Initial")]
+    [Migration("20181107031703_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,9 @@ namespace Yuriy.Web.Migrations
 
             modelBuilder.Entity("Yuriy.Web.Data.NotificationType", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -1,17 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Yuriy.Core;
 
 namespace Yuriy.Web.Data
 {
     public partial class AdPerspectiveContext : DbContext
     {
-        public AdPerspectiveContext()
-        {
-        }
+        public AdPerspectiveContext() {}
 
-        public AdPerspectiveContext(DbContextOptions<AdPerspectiveContext> options)
-            : base(options)
-        {
-        }
+        public AdPerspectiveContext(DbContextOptions<AdPerspectiveContext> options): base(options) {}
 
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationType> NotificationType { get; set; }
