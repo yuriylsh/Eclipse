@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Yuriy.Web.Data
 {
@@ -20,15 +18,6 @@ namespace Yuriy.Web.Data
         public virtual DbSet<NotificationUnsubscribe> NotificationUnsubscribe { get; set; }
         public virtual DbSet<NotificationWhileUnsubscribed> NotificationWhileUnsubscribed { get; set; }
         public virtual DbSet<User> User { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=.;Integrated Security=SSPI;Database=adPerspective");
-//            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +71,13 @@ namespace Yuriy.Web.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_NotificationWhileUnsubscribed_User");
             });
+
+            SeedData(modelBuilder);
+        }
+
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+           
         }
     }
 }

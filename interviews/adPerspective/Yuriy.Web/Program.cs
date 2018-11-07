@@ -15,8 +15,7 @@ namespace Yuriy.Web
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<AdPerspectiveContext>();
-                context.Database.EnsureCreated();
-                // context.Database.Migrate();
+                context.Database.Migrate();
                    
             }
             host.Run();

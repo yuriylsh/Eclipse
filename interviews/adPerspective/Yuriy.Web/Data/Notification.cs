@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +15,7 @@ namespace Yuriy.Web.Data
         [Column(TypeName = "datetimeoffset(0)")]
         public DateTimeOffset Date { get; set; }
 
-        [ForeignKey("Type")]
+        [ForeignKey("Id")]
         [InverseProperty("Notification")]
         public NotificationType TypeNavigation { get; set; }
         [ForeignKey("User")]

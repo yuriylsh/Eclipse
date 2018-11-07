@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,7 +14,6 @@ namespace Yuriy.Web.Data
         }
 
         public int Id { get; set; }
-        public int Type { get; set; }
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
