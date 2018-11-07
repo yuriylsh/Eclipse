@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Yuriy.Core;
 
 namespace Yuriy.Web.Data
 {
