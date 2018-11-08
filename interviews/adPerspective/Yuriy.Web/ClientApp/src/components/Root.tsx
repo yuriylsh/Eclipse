@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Login } from './Login'
 import { authenticate } from '../api'
+import {NotificationManager} from './NotificationManager'
 
 interface RootState {
     isAuthenticating: boolean,
@@ -20,12 +21,15 @@ export class Root extends Component<{}, RootState> {
     render() {
         const { isAuthenticating, userId, userToken } = this.state
         return (
-            <Login
-                isAuthenticating={isAuthenticating}
-                userId={userId}
-                userToken={userToken}
-                swithToUser={user => this.performAuthentication(user.id)}>
-            </Login>
+            <>
+                <Login
+                    isAuthenticating={isAuthenticating}
+                    userId={userId}
+                    userToken={userToken}
+                    swithToUser={user => this.performAuthentication(user.id)}>
+                </Login>
+                {userId && <NotificationManager userId={userId!} userToken={userToken!} />}
+            </>
         )
     }
 

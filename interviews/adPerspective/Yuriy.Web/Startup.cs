@@ -34,6 +34,8 @@ namespace Yuriy.Web
                 => builder.UseSqlServer(Configuration.GetConnectionString(nameof(AdPerspectiveContext))));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

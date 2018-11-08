@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Yuriy.Core.Model;
 
 namespace Yuriy.Web.Data
 {
@@ -13,6 +14,7 @@ namespace Yuriy.Web.Data
         public virtual DbSet<NotificationUnsubscribe> NotificationUnsubscribe { get; set; }
         public virtual DbSet<NotificationWhileUnsubscribed> NotificationWhileUnsubscribed { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbQuery<Subscription> NotificationSubscription {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

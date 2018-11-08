@@ -1,0 +1,13 @@
+.notificationManagerContainer{
+    max-width: 50%;
+    margin-top: 2em;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    align-items: center;
+    input{
+        margin:0;
+        transform: scale(1.5);
+    }
+}

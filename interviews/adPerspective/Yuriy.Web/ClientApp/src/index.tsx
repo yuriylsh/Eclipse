@@ -7,6 +7,7 @@ import { ConnectedRouter } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import { Root } from './components/Root';
+import './index.scss'
 
 
 // Create browser history to use in the Redux store

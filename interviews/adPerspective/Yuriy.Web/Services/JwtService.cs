@@ -7,6 +7,7 @@ namespace Yuriy.Web.Services
 {
     public class JwtService : IJwtService
     {
+        public const string IdClaim = "Id";
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
         private readonly SigningCredentials _signinCredentials;
 
@@ -18,7 +19,7 @@ namespace Yuriy.Web.Services
 
         public string GetUserToken(IUser user)
         {
-            var claims = new [] { new Claim("Id", user.Id.ToString("0")) };
+            var claims = new [] { new Claim(IdClaim, user.Id.ToString("0")) };
             return _jwtSecurityTokenHandler.WriteToken(new JwtSecurityToken(
                 claims: claims,
                 signingCredentials: _signinCredentials));
