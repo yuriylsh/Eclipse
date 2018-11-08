@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Yuriy.Core.Repositories;
+using Yuriy.Core.Services;
 using Yuriy.Web.Data;
+using Yuriy.Web.Repositories;
+using Yuriy.Web.Services;
 
 namespace Yuriy.Web
 {
@@ -20,8 +24,7 @@ namespace Yuriy.Web
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureAuthentication(services);
@@ -29,6 +32,8 @@ namespace Yuriy.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<AdPerspectiveContext>(builder 
                 => builder.UseSqlServer(Configuration.GetConnectionString(nameof(AdPerspectiveContext))));
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -39,19 +44,22 @@ namespace Yuriy.Web
 
         private void ConfigureAuthentication(IServiceCollection services)
         {
+            SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwtSecurityKeyValue"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt =>opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["jwtSecurityKeyValue"])),
-                    RequireExpirationTime = false,
-                    ValidateLifetime = false});
+                .AddJwtBearer(opt =>
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = securityKey,
+                        RequireExpirationTime = false,
+                        ValidateLifetime = false
+                    }
+                );
+            services.AddSingleton<IJwtService>(new JwtService(securityKey));
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

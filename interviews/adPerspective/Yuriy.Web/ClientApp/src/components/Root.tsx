@@ -1,7 +1,40 @@
-import * as React from 'react'
-import { RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Login } from './Login'
+import { authenticate } from '../api'
 
-export const Root: React.SFC = () => <div className="root">This is root. Current environment is {process.env.NODE_ENV}. Go to <Link to="/child1">Child1</Link> or <Link to="child2/123">Child2</Link>.</div>
-export const Child1: React.SFC = () => <div className="child1">This is Child1. Back to <Link to="/">root</Link>.</div>
-export const Child2: React.SFC<RouteComponentProps<{param1: string}>> = (props) => <div className="child2">{`This is Child2 with param1 = ${props.match.params.param1}`}. Back to <Link to="/">root</Link>.</div>
+interface RootState {
+    isAuthenticating: boolean,
+    userId?: number,
+    userToken?: string
+}
+
+export class Root extends Component<{}, RootState> {
+    state: RootState = {
+        isAuthenticating: false
+    }
+
+    componentDidMount() {
+        this.performAuthentication();
+    }
+
+    render() {
+        const { isAuthenticating, userId, userToken } = this.state
+        return (
+            <Login
+                isAuthenticating={isAuthenticating}
+                userId={userId}
+                userToken={userToken}
+                swithToUser={user => this.performAuthentication(user.id)}>
+            </Login>
+        )
+    }
+
+    performAuthentication(id?: number) {
+        this.setState({ isAuthenticating: true })
+        authenticate(id).then(authResponse => this.setState({
+            isAuthenticating: false,
+            userId: authResponse.id,
+            userToken: authResponse.token
+        }))
+    }
+}

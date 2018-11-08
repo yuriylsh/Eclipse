@@ -1,0 +1,24 @@
+
+.login {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: .5em;
+    display: inline-block;
+   .welcomeContainer{
+       display: inline-block;
+       span{
+           font-weight: bold;
+           font-size: larger;
+       }
+   }
+   .switchtoContainer{
+       display: inline-block;
+       margin-left: 3em;
+       span{
+           padding-left: .5em;
+           text-decoration: underline;
+           color: blue;
+           cursor: pointer;
+       }
+   }
+}

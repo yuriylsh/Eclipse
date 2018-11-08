@@ -1,17 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Yuriy.Core.Services;
+using Yuriy.Web.Services;
 
 namespace Yuriy.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthenticationController : Controller
+    [ApiController]
+    public class AuthenticationController : ControllerBase
     {
-        [HttpPost("[action]")]
-        public IActionResult Login([FromBody] int id)
+        private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
+
+        public AuthenticationController(IUserService userService, IJwtService jwtService)
         {
-            return null;
+            _userService = userService;
+            _jwtService = jwtService;
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Login([FromForm]int? id)
+        {
+            var user = await _userService.GetUser(id);
+            return Ok(new {id = user.Id, token = _jwtService.GetUserToken(user)});
         }
     }
 }

@@ -1,4 +1,3 @@
-import './index.scss';
 // tslint:disable-next-line:ordered-imports
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -7,8 +6,8 @@ import { ConnectedRouter } from 'react-router-redux';
 // tslint:disable-next-line:ordered-imports
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
-// tslint:disable-next-line:ordered-imports
-import App from './App';
+import { Root } from './components/Root';
+
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
@@ -23,7 +22,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <App />
+      <Root />
     </ConnectedRouter>
   </Provider>,
   rootElement);
