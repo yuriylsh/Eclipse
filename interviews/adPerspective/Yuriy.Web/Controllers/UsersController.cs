@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,7 @@ namespace Yuriy.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly ISubscriptionService _subscriptionService;
@@ -31,13 +32,12 @@ namespace Yuriy.Web.Controllers
         }
 
         [HttpGet("{id}/subscriptions")]
-        public async Task<ActionResult<IEnumerable<Subscription>>> GetUserSubscriptions(int userId)
-        {
-            if(!ControllerContext.HttpContext.ValidateAgainstJwt(userId))
-            {
-                return new ForbidResult();
-            }
-            return Ok(await _subscriptionService.GetUserNotificationSubscriptions(userId));
-        }
+        public async Task<IActionResult> GetUserSubscriptions(int userId)
+            => await IfValidUserId(userId, id => _subscriptionService.GetUserNotificationSubscriptions(id));
+        
+
+        private async Task<IActionResult> IfValidUserId<TResult>(int userId, Func<int, Task<TResult>> ifValid) 
+            => await this.IfInputIsValid(userId, ControllerContext.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
+
     }
 }
