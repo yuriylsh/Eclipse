@@ -1,8 +1,8 @@
-
+$theme-color: rgb(4, 183, 233);
 .login { 
     font-size: smaller;
     padding: .2em 0 .2em 0;
-    background-color: rgb(41, 147, 177);
+    background-color: $theme-color;
     text-align: center;
    .welcomeContainer{
        display: inline-block;
@@ -20,4 +20,9 @@
            cursor: pointer;
        }
    }
+}
+#root{
+    border: 1px solid $theme-color;
+    padding-bottom: 1em;
+    border-top: none;
 }
