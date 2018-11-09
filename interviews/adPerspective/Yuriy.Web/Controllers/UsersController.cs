@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yuriy.Core.Model;
 using Yuriy.Core.Services;
-using Yuriy.Web.Services;
 using Yuriy.Web.ViewModels;
 
 namespace Yuriy.Web.Controllers
@@ -33,11 +30,15 @@ namespace Yuriy.Web.Controllers
 
         [HttpGet("{id}/subscriptions")]
         public async Task<IActionResult> GetUserSubscriptions(int userId)
-            => await IfValidUserId(userId, id => _subscriptionService.GetUserNotificationSubscriptions(id));
-        
+            => await this.IfValidUserId(userId, () => _subscriptionService.GetUserNotificationSubscriptions(userId));
 
-        private async Task<IActionResult> IfValidUserId<TResult>(int userId, Func<int, Task<TResult>> ifValid) 
-            => await this.IfInputIsValid(userId, ControllerContext.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
-
+        [HttpPut("{userId}/subscriptions")]
+        public async Task<IActionResult> UpdateUserSubscriptions(int userId, [FromForm] SubscriptionUpdate[] updates)
+            => await this.IfValidUserId(userId, async () =>
+            {
+                if (!await _subscriptionService.ValidateUpdates(updates)) return BadRequest();
+                await _subscriptionService.ApplyUpdates(userId, updates);
+                return Ok();
+            });
     }
 }
