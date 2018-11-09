@@ -28,12 +28,12 @@ namespace Yuriy.Web.Controllers
             return Ok(users.Select(user => new UserViewModel(user.Id, user.FirstName, user.LastName)));
         }
 
-        [HttpGet("{id}/subscriptions")]
+        [HttpGet("{userId}/subscriptions")]
         public async Task<IActionResult> GetUserSubscriptions(int userId)
             => await this.IfValidUserId(userId, () => _subscriptionService.GetUserNotificationSubscriptions(userId));
 
         [HttpPut("{userId}/subscriptions")]
-        public async Task<IActionResult> UpdateUserSubscriptions(int userId, [FromForm] SubscriptionUpdate[] updates)
+        public async Task<IActionResult> UpdateUserSubscriptions(int userId, [FromBody] SubscriptionUpdate[] updates)
             => await this.IfValidUserId(userId, async () =>
             {
                 if (!await _subscriptionService.ValidateUpdates(updates)) return BadRequest();

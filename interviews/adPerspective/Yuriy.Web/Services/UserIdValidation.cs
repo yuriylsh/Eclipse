@@ -6,7 +6,7 @@ namespace Yuriy.Web.Services
     public static class UserIdValidation
     {
         public static bool ValidateAgainstJwt(this HttpContext context, int userId) 
-            => TryGetUserIdFromJwt(context, out var idFromJwt) && userId != idFromJwt;
+            => TryGetUserIdFromJwt(context, out var idFromJwt) && userId == idFromJwt;
 
         private static bool TryGetUserIdFromJwt(HttpContext httpContext, out int id)
         {

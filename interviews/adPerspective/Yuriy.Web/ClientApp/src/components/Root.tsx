@@ -20,6 +20,7 @@ export class Root extends Component<{}, RootState> {
 
     render() {
         const { isAuthenticating, userId, userToken } = this.state
+        const showUserData = userId && !isAuthenticating
         return (
             <>
                 <Login
@@ -28,7 +29,7 @@ export class Root extends Component<{}, RootState> {
                     userToken={userToken}
                     swithToUser={user => this.performAuthentication(user.id)}>
                 </Login>
-                {userId && <NotificationManager userId={userId!} userToken={userToken!} />}
+                {showUserData && <NotificationManager userId={userId!} userToken={userToken!} />}
             </>
         )
     }

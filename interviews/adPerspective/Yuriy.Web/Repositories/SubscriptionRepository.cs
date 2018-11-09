@@ -16,7 +16,7 @@ namespace Yuriy.Web.Repositories
 
         public async Task<IEnumerable<Subscription>> GetByUser(int id) 
             => await _context.NotificationSubscription.FromSql(@"
-SELECT NotificationType.Id, NotificationType.[Name], CASE WHEN unsubscribes.Id IS NULL THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END AS IsUnsubscribed
+SELECT NotificationType.Id, NotificationType.[Name], CASE WHEN unsubscribes.[User] IS NULL THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END AS IsUnsubscribed
   FROM dbo.NotificationType
 	   LEFT JOIN dbo.NotificationUnsubscribe unsubscribes
 	          ON NotificationType.Id = unsubscribes.Type AND unsubscribes.[User] = {0}"
@@ -27,21 +27,26 @@ SELECT NotificationType.Id, NotificationType.[Name], CASE WHEN unsubscribes.Id I
 
         public async Task UnsubscribeFromNotifications(int userId, IEnumerable<int> notificationTypes)
         {
-            await _context.NotificationUnsubscribe.AddRangeAsync(
-                notificationTypes.Select(notificationType => new NotificationUnsubscribe
+            var typeIds = notificationTypes.ToArray();
+            var existingTypeIds = await GetExisting(userId, typeIds).Select(x => x.Type).ToArrayAsync();
+            _context.NotificationUnsubscribe.AddRange(
+                typeIds.Except(existingTypeIds).Select(notificationType => new NotificationUnsubscribe
                 {
                     User = userId,
                     Type = notificationType
                 }));
+            await _context.SaveChangesAsync();
         }
 
         public async Task SubscribeToNotifications(int userId, IEnumerable<int> notificationTypes)
         {
-            var toRemove = await _context.NotificationUnsubscribe
-                .Where(x => x.User == userId && notificationTypes.Contains(x.Type))
-                .ToArrayAsync();
-            _context.NotificationUnsubscribe.RemoveRange(toRemove);
+            _context.NotificationUnsubscribe.RemoveRange(await GetExisting(userId, notificationTypes).ToArrayAsync());
             await _context.SaveChangesAsync();
         }
+
+        private IQueryable<NotificationUnsubscribe> GetExisting(int userId, IEnumerable<int> notificationTypes) 
+            => _context.NotificationUnsubscribe
+                .Where(x => x.User == userId && notificationTypes.Contains(x.Type));
+                
     }
 }

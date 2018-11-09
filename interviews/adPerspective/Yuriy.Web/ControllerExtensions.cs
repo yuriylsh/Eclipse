@@ -10,7 +10,7 @@ namespace Yuriy.Web
         public static async Task<IActionResult> IfValidUserId<TResult>(this ControllerBase controller,
             int userId, 
             Func<Task<TResult>> ifValid) 
-            => await IfInputIsValid(controller, userId, controller.ControllerContext.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
+            => await IfInputIsValid(controller, userId, controller.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
 
         public static async Task<IActionResult> IfInputIsValid<T, TResult>(this ControllerBase controller,
             T input,
@@ -22,8 +22,8 @@ namespace Yuriy.Web
         public static async Task<IActionResult> IfValidUserId(this ControllerBase controller,
             int userId, 
             Func<Task<IActionResult>> ifValid) 
-            => await IfInputIsValid(controller, userId, controller.ControllerContext.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
-
+            => await IfInputIsValid(controller, userId, controller.HttpContext.ValidateAgainstJwt, ifValid, new ForbidResult());
+        
         public static async Task<IActionResult> IfInputIsValid<T>(this ControllerBase controller,
             T input,
             Predicate<T> validation,
