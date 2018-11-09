@@ -10,9 +10,9 @@ namespace Yuriy.Web.Repositories
 {
     public class SubscriptionRepository: ISubscriptionRepository
     {
-        private readonly AdPerspectiveContext _context;
+        private readonly AdPredictiveContext _context;
 
-        public SubscriptionRepository(AdPerspectiveContext context) => _context = context;
+        public SubscriptionRepository(AdPredictiveContext context) => _context = context;
 
         public async Task<IEnumerable<Subscription>> GetByUser(int id) 
             => await _context.NotificationSubscription.FromSql(@"

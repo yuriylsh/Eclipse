@@ -9,7 +9,7 @@ using Yuriy.Web.Data;
 
 namespace Yuriy.Web.Migrations
 {
-    [DbContext(typeof(AdPerspectiveContext))]
+    [DbContext(typeof(AdPredictiveContext))]
     [Migration("20181107130320_SeedingUserAndNotificationTypeData")]
     partial class SeedingUserAndNotificationTypeData
     {

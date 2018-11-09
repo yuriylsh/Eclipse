@@ -3,13 +3,12 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yuriy.Web.Data;
 
 namespace Yuriy.Web.Migrations
 {
-    [DbContext(typeof(AdPerspectiveContext))]
-    partial class AdPerspectiveContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AdPredictiveContext))]
+    partial class AdPredictiveContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

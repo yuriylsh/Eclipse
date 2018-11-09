@@ -3,11 +3,11 @@ using Yuriy.Core.Model;
 
 namespace Yuriy.Web.Data
 {
-    public partial class AdPerspectiveContext : DbContext
+    public partial class AdPredictiveContext : DbContext
     {
-        public AdPerspectiveContext() {}
+        public AdPredictiveContext() {}
 
-        public AdPerspectiveContext(DbContextOptions<AdPerspectiveContext> options): base(options) {}
+        public AdPredictiveContext(DbContextOptions<AdPredictiveContext> options): base(options) {}
 
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<NotificationType> NotificationType { get; set; }

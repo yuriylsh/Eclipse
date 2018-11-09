@@ -9,9 +9,9 @@ namespace Yuriy.Web.Repositories
 {
     public sealed class UserRepository: IUserRepository
     {
-        private readonly AdPerspectiveContext _context;
+        private readonly AdPredictiveContext _context;
 
-        public UserRepository(AdPerspectiveContext context)
+        public UserRepository(AdPredictiveContext context)
         {
             _context = context;
         }

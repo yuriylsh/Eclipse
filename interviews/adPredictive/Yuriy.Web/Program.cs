@@ -19,7 +19,7 @@ namespace Yuriy.Web
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<AdPerspectiveContext>();
+                    var context = services.GetRequiredService<AdPredictiveContext>();
                     context.Database.Migrate();
                 }
                 catch (System.Exception ex)

@@ -30,8 +30,8 @@ namespace Yuriy.Web
             ConfigureAuthentication(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<AdPerspectiveContext>(builder 
-                => builder.UseSqlServer(Configuration.GetConnectionString(nameof(AdPerspectiveContext))));
+            services.AddDbContext<AdPredictiveContext>(builder 
+                => builder.UseSqlServer(Configuration.GetConnectionString(nameof(AdPredictiveContext))));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
