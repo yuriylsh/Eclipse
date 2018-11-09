@@ -30,6 +30,7 @@ export class Root extends Component<{}, RootState> {
                     swithToUser={user => this.performAuthentication(user.id)}>
                 </Login>
                 {showUserData && <NotificationManager userId={userId!} userToken={userToken!} />}
+                <footer>Yuriy Lyeshchenko © 2018</footer>
             </>
         )
     }

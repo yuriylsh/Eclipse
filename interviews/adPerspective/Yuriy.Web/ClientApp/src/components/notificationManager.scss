@@ -1,20 +1,23 @@
-.notificationManagerContainer{
-    max-width: 50%;
-    margin-top: 2em;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
-    align-items: center;
-    input{
-        margin:0;
-        transform: scale(1.5);
+.notificationManager{
+    padding-left: .5em;
+    .notificationManagerContainer{
+        max-width: 50%;
+        margin-top: 2em;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 1em;
+        grid-row-gap: 1em;
+        align-items: center;
+        input{
+            margin:0;
+            transform: scale(1.5);
+        }
     }
-}
-input.updateButton{
-    margin-top: 1em;
-    padding: .5em 1.5em .5em 1.5em;
-    border-radius: 2px;
-    border-width: 0;
-    font-size: larger;
+    input.updateButton{
+        margin-top: 1em;
+        padding: .5em 1.5em .5em 1.5em;
+        border-radius: 2px;
+        border-width: 0;
+        font-size: larger;
+    }
 }

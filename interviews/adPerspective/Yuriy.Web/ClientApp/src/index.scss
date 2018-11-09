@@ -3,4 +3,19 @@ html{
     body{
         padding: .5em;
     }
+    footer{
+        float: left;
+        width: 100%;
+        text-align: center;
+        height: 2em;
+        color: #999;
+        font-size: 75%;
+        font-style: italic;
+        margin-top: 2em;
+    }
+    #root{
+        border: 1px solid lightgray;
+        padding-bottom: 1em;
+        border-top: none;
+    }
 }

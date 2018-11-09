@@ -31,14 +31,14 @@ export class NotificationManager extends Component<INotificationManagerProps, IN
 
     render() {
         return (
-            <>
+            <div className="notificationManager">
                 <h2>Notification Management</h2>                
                 <div className="notificationManagerContainer">
                     {this.state.subscriptions.map(s => 
                         <Subscription key={s.id} subscription={s} handleSubscriptionChange={this.handleSubscriptionChange} />)}
                 </div>
                 <input onClick={this.handleSubmit} type="button" className="updateButton" value="Update" disabled={!this.state.isDirty}/>                
-            </>
+            </div>
         )
     }
 
