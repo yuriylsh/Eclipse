@@ -20,4 +20,13 @@
     <ProjectReference Include="..\ClearCode\ClearCode.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="MultipleProjFiles\project2.csproj" />
+    <None Include="MultipleProjFiles\project1.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NoProjectFiles\" />
+  </ItemGroup>
+
 </Project>
