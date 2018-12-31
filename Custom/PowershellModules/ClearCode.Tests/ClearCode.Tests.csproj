@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\node_modules\" />
     <Folder Include="NoProjectFiles\" />
   </ItemGroup>
 

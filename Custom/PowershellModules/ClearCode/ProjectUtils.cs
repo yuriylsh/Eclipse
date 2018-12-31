@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace ClearCode
 {
@@ -22,16 +23,36 @@ namespace ClearCode
                 case 1:
                     return foundProjects[0];
                 case 0:
-                    _logError("Expected one .csproj file in the current directory. Found none.");
+                    _logError($"Expected one .csproj file in the '{directory}' directory. Found none.");
                     break;
                 default:
                     var multipleFiles = string.Join(", ", foundProjects.Select(x => "'" + x + "'"));
                     _logError(
-                        $"Expected only one .csproj file in the current directory. Found {foundProjects.Length} project files instead: {multipleFiles}");
+                        $"Expected only one .csproj file in the '{directory}' directory. Found {foundProjects.Length} project files instead: {multipleFiles}");
                     break;
             }
             
             return null;
         }
+
+        public (string[] directories, string[] files) FindEntriesToClear(string project)
+        {
+            var projectDir = new FileInfo(project).DirectoryName;
+            return (FindDirectoriesToClear(projectDir), FindFilesToClear(projectDir));
+        }
+
+        private string[] FindDirectoriesToClear(string projectDir) =>
+            new[] {"bin", "obj", "ClientApp\\node_modules"}
+                .Select(x => new DirectoryInfo(Path.Combine(projectDir, x)))
+                .Where(x => x.Exists)
+                .Select(x => x.FullName)
+                .ToArray();
+
+        private string[] FindFilesToClear(string projectDir) =>
+            new[] {"ClientApp\\package-lock.json"}
+                .Select(x => new FileInfo(Path.Combine(projectDir, x)))
+                .Where(x => x.Exists)
+                .Select(x => x.FullName)
+                .ToArray();
     }
 }
