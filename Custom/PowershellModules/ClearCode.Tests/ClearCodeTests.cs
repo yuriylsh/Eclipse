@@ -14,7 +14,7 @@ namespace ClearCode.Tests
         public ClearCodeTests()
         {
             _projectDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            _subject = new ProjectUtils(error => _errorMessage = error);
+            _subject = new ProjectUtils(ConfigurationLoader.LoadConfiguration(_ => null), error => _errorMessage = error);
         }
 
         [Fact]

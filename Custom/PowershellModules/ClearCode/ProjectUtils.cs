@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 
 namespace ClearCode
 {
     public class ProjectUtils
     {
+        private readonly IClearCodeConfiguration _configuration;
         private readonly Action<string> _logError;
 
-        public ProjectUtils(Action<string> logError)
+        public ProjectUtils(IClearCodeConfiguration configuration, Action<string> logError)
         {
+            _configuration = configuration;
             _logError = logError;
         }
 
@@ -42,14 +43,14 @@ namespace ClearCode
         }
 
         private string[] FindDirectoriesToClear(string projectDir) =>
-            new[] {"bin", "obj", "ClientApp\\node_modules"}
+            _configuration.ToRemoveDirectories
                 .Select(x => new DirectoryInfo(Path.Combine(projectDir, x)))
                 .Where(x => x.Exists)
                 .Select(x => x.FullName)
                 .ToArray();
 
         private string[] FindFilesToClear(string projectDir) =>
-            new[] {"ClientApp\\package-lock.json"}
+            _configuration.ToRemoveFiles
                 .Select(x => new FileInfo(Path.Combine(projectDir, x)))
                 .Where(x => x.Exists)
                 .Select(x => x.FullName)

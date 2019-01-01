@@ -11,8 +11,8 @@ namespace ClearCode
     {
         protected override void EndProcessing()
         {
-            var utils = new ProjectUtils(msg => WriteError(new ErrorRecord(
-                new Exception(msg), "Clear-Project", ErrorCategory.InvalidOperation, null )));
+            var config = ConfigurationLoader.LoadConfiguration(GetVariableValue);
+            var utils = new ProjectUtils(config, LogError);
             var projectFile = utils.GetProjectFile(SessionState.Path.CurrentFileSystemLocation.Path);
             if (projectFile != null)
             {
@@ -21,6 +21,11 @@ namespace ClearCode
             }
 
             base.EndProcessing();
+        }
+
+        private void LogError(string msg)
+        {
+            WriteError(new ErrorRecord(new Exception(msg), "Clear-Project", ErrorCategory.InvalidOperation, null));
         }
 
         private void PerformClearing(string projectFile, ProjectUtils utils)
@@ -38,7 +43,16 @@ namespace ClearCode
                 ps.Invoke();
                 ps.InvocationStateChanged -= ClearingStateChanged;
             }
-            
+        }
+
+        private void ReportEntriesToClear(string[] files, string[] directories)
+        {
+            var entries = new List<object>(files.Length + directories.Length);
+            entries.AddRange(files.Select(x => new {Type="File", Path=x}));
+            entries.AddRange(directories.Select(x => new {Type="Directory", Path=x}));
+            WriteObject("The following entries are going to be deleted:");
+            WriteObject(entries, true);
+            WriteObject(Environment.NewLine);
         }
 
         private void ClearingStateChanged(object sender, PSInvocationStateChangedEventArgs args)
@@ -76,16 +90,6 @@ namespace ClearCode
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private void ReportEntriesToClear(string[] files, string[] directories)
-        {
-            var entries = new List<object>(files.Length + directories.Length);
-            entries.AddRange(files.Select(x => new {Type="file", Path=x}));
-            entries.AddRange(directories.Select(x => new {Type="directory", Path=x}));
-            WriteObject("The following entries are going to be deleted:");
-            WriteObject(entries, true);
-            WriteObject(Environment.NewLine);
         }
     }
 }
