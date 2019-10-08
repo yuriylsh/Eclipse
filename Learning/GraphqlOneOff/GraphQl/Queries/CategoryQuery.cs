@@ -1,8 +1,8 @@
 using GraphQL.Types;
 using GraphqlOneOff.DAL;
-using GraphqlOneOff.Types;
+using GraphqlOneOff.GraphQl.Types;
 
-namespace GraphqlOneOff.Queries
+namespace GraphqlOneOff.GraphQl.Queries
 {
     public class CategoryQuery: ObjectGraphType
     {

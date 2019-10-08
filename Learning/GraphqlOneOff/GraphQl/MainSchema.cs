@@ -1,14 +1,15 @@
 using GraphQL;
 using GraphQL.Types;
-using GraphqlOneOff.Queries;
+using GraphqlOneOff.GraphQl.Queries;
 
-namespace GraphqlOneOff
+namespace GraphqlOneOff.GraphQl
 {
     public class MainSchema: Schema
     {
         public MainSchema(IDependencyResolver dependencyResolver) : base(dependencyResolver)
         {
-            Query = dependencyResolver.Resolve<CategoryQuery>();
+            var query = dependencyResolver.Resolve<CategoryQuery>();
+            Query = query;
         }
     }
 }
