@@ -1,15 +1,15 @@
-using System.Collections.Generic;
 using GraphQL.Types;
+using GraphqlOneOff.DAL;
 
 namespace GraphqlOneOff.GraphQl.Types
 {
     public class CategoryType: ObjectGraphType<Category>
     {
-        public CategoryType()
+        public CategoryType(GetDescendants getDescendants)
         {
             Field(x => x.Id);
             Field(x => x.Name);
-            Field<ListGraphType<CategoryType>>("descendats", resolve: x => x.Source.Descendants);
+            Field<ListGraphType<CategoryType>>("descendants", resolve: x => getDescendants(x.Source.Id));
         }
     }
 
@@ -17,7 +17,5 @@ namespace GraphqlOneOff.GraphQl.Types
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
-        public IEnumerable<Category> Descendants { get; set; }
     }
 }

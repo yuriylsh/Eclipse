@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using GraphqlOneOff.GraphQl.Types;
 using LanguageExt;
@@ -7,6 +8,8 @@ using LanguageExt;
 namespace GraphqlOneOff.DAL
 {
     public delegate IEnumerable<Category> GetAllCategories();
+
+    public delegate IEnumerable<Category> GetDescendants(int id);
 
     public static class FakeDataProvider
     {
@@ -513,21 +516,21 @@ namespace GraphqlOneOff.DAL
                 Gender = "Female", IpAddress = "203.52.99.162", IsChild = true
             },
         };
-        
-        public static IEnumerable<Category> GetAllCategories()
-        {
-            var adults = People.Where(x => !x.IsChild).Select(PersonToCategory).ToArray();
-            adults.Iter(SetDescendats);
-            return adults;
-        }
+
+        public static IEnumerable<Category> GetAllCategories() =>
+            People.Where(x => !x.IsChild).Select(PersonToCategory).ToArray();
+
+        public static GetDescendants GetDescendantCategories() => new GetDescendants(Prelude.par<Category[], int, IEnumerable<Category>>(GetChildren, Children));
 
         private static Category[] Children => People.Where(x => x.IsChild).Select(PersonToCategory).ToArray();
 
         private static Category PersonToCategory(Person p) => new Category {Id = p.Id, Name = $"{p.FirstName} {p.LastName}"};
 
-        private static void SetChildren(Category[] children, Category adult) => adult.Descendants = Enumerable.Range(0, Rnd.Next(0, 3)).Map(_ =>children[Rnd.Next(0, children.Length -1)]);
-
-        private static readonly Action<Category> SetDescendats = Prelude.par<Category[], Category>(SetChildren, Children);
+        private static IEnumerable<Category> GetChildren(Category[] children, int id)
+        {
+            Debug.WriteLine($"Getting descendants for {id}");
+            return Enumerable.Range(0, Rnd.Next(0, 3)).Map(_ => children[Rnd.Next(0, children.Length - 1)]);
+        }
         
         private static readonly Random Rnd = new Random((int)DateTime.UtcNow.Ticks);
 
