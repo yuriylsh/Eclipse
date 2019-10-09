@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using GraphqlOneOff.GraphQl.Types;
 using LanguageExt;
 
@@ -10,6 +12,7 @@ namespace GraphqlOneOff.DAL
     public delegate IEnumerable<Category> GetAllCategories();
 
     public delegate IEnumerable<Category> GetDescendants(int id);
+    public delegate Task<ILookup<int, Category>> GetDescendantsBatched(IEnumerable<int> parents, CancellationToken token);
 
     public static class FakeDataProvider
     {
@@ -519,6 +522,12 @@ namespace GraphqlOneOff.DAL
 
         public static IEnumerable<Category> GetAllCategories() =>
             People.Where(x => !x.IsChild).Select(PersonToCategory).ToArray();
+        public static Task<ILookup<int, Category>> GetDescendantsBatchedImplementation(IEnumerable<int> parents,CancellationToken token)
+        {
+            var getChildren = GetDescendantCategories();
+            var lookup = parents.SelectMany(x => getChildren(x).Select(child => (x, child))).ToLookup(x => x.x, x => x.child);
+            return Task.FromResult(lookup);
+        }
 
         public static GetDescendants GetDescendantCategories() => new GetDescendants(Prelude.par<Category[], int, IEnumerable<Category>>(GetChildren, Children));
 
@@ -531,7 +540,9 @@ namespace GraphqlOneOff.DAL
             Debug.WriteLine($"Getting descendants for {id}");
             return Enumerable.Range(0, Rnd.Next(0, 3)).Map(_ => children[Rnd.Next(0, children.Length - 1)]);
         }
+
         
+
         private static readonly Random Rnd = new Random((int)DateTime.UtcNow.Ticks);
 
         class Person

@@ -1,4 +1,6 @@
 using GraphQL;
+using GraphQL.DataLoader;
+using GraphQL.Execution;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphqlOneOff.DAL;
@@ -24,6 +26,12 @@ namespace GraphqlOneOff
             
             services.AddSingleton<GetAllCategories>(FakeDataProvider.GetAllCategories);
             services.AddSingleton(FakeDataProvider.GetDescendantCategories());
+            services.AddSingleton<GetDescendantsBatched>(FakeDataProvider.GetDescendantsBatchedImplementation);
+
+            // adding data loader
+            // the two lines below could be replaced by call to services.AddDataLoader() if I add GraphQL.Server.Core nuget package
+            services.AddSingleton<IDataLoaderContextAccessor, DataLoaderContextAccessor>();
+            services.AddSingleton<IDocumentExecutionListener, DataLoaderDocumentListener>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
