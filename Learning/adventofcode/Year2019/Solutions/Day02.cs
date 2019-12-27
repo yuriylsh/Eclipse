@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 
 namespace Solutions
@@ -8,20 +8,25 @@ namespace Solutions
         public static int Part1(string program, int noun = 12, int verb = 2)
         {
             var input = Parse(program);
-            input[1] = noun;
-            input[2] = verb;
-            Run(input);
-            return input[0];
+            Span<int> memory = stackalloc int[input.Length];
+            Clone(input, memory);
+            SetNounAndVerb(noun, verb, memory);
+            Run(memory);
+            return memory[0];
         }
         
         public static (int noun, int verb) Part2(string program)
         {
-            for (int noun = 0; noun <= 99; noun++)
+            var input = Parse(program);
+            Span<int> memory = stackalloc int[input.Length];
+            for (var noun = 0; noun <= 99; noun++)
             {
                 for (var verb = 0; verb <= 99; verb++)
                 {
-                    var result = Part1(program, noun, verb);
-                    if (result == 19690720)
+                    Clone(input, memory);
+                    SetNounAndVerb(noun, verb, memory);
+                    Run(memory);
+                    if (memory[0] == 19690720)
                     {
                         return (noun, verb);
                     }
@@ -38,78 +43,53 @@ namespace Solutions
             return string.Join(',', input);
         }
 
-        private static void Run(int[] program)
+        private static void Run(Span<int> program)
         {
-            foreach (var opcode in GetOpcodes(program))
-            {
-                opcode.Execute(program);
-            }
-        }
-
-        private static IEnumerable<Opcode> GetOpcodes(int[] program)
-        {
-            for (int i = 0; i < program.Length; i++)
+            for (var i = 0; i < program.Length; i++)
             {
                 var current = program[i];
-                if (current == 99) break;
+                if (current == HaltOpcode) break;
                 if (current == AddOpcode)
                 {
-                    yield return new Add(program[++i], program[++i], program[++i]);
+                    i += Add(program, i);
                     continue;
                 }
-                yield return new Multiply(program[++i], program[++i], program[++i]);
+                i += Multiply(program, i);
             }
         }
 
-        private class Add : Opcode
+
+        private static int Add(Span<int> program, int index)
         {
-            private readonly int _operand1;
-            private readonly int _operand2;
-            private readonly int _target;
-
-            public Add(int operand1, int operand2, int target)
-            {
-                _operand1 = operand1;
-                _operand2 = operand2;
-                _target = target;
-            }
-
-            public void Execute(int[] program)
-            {
-                program[_target] = program[_operand1] + program[_operand2];
-            }
+            var targetIndex = program[index + 3];
+            var parameter1Index = program[index + 1];
+            var parameter2Index = program[index + 2];
+            program[targetIndex] = program[parameter1Index] + program[parameter2Index];
+            return 3;
         }
         
-        private class Multiply : Opcode
+        private static int Multiply(Span<int> program, int index)
         {
-            private readonly int _operand1;
-            private readonly int _operand2;
-            private readonly int _target;
-
-            public Multiply(int operand1, int operand2, int target)
-            {
-                _operand1 = operand1;
-                _operand2 = operand2;
-                _target = target;
-            }
-
-            public void Execute(int[] program)
-            {
-                program[_target] = program[_operand1] * program[_operand2];
-            }
+            var targetIndex = program[index + 3];
+            var parameter1Index = program[index + 1];
+            var parameter2Index = program[index + 2];
+            program[targetIndex] = program[parameter1Index] * program[parameter2Index];
+            return 3;
         }
-        
-        private interface Opcode
-        {
-            void Execute(int[] program);
-        }
+
 
         private static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
+
+        private static void Clone(int[] program, Span<int> target) => program.AsSpan().CopyTo(target);
+
+        private static void SetNounAndVerb(int noun, int verb, Span<int> memory)
+        {
+            memory[1] = noun;
+            memory[2] = verb;
+        }
 
         private const int HaltOpcode = 99;
         private const int AddOpcode = 1;
         private const int MultiplyOpcode = 2;
-
-        
     }
 }

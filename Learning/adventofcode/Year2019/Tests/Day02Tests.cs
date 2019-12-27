@@ -18,7 +18,9 @@ namespace Tests
             var (noun, verb) = Day02.Part2(Input);
 
             Day02.Part1(Input, noun, verb).Should().Be(19690720);
-            (100 * noun + verb).Should().Be(11);
+            noun.Should().Be(64);
+            verb.Should().Be(21);
+            (100 * noun + verb).Should().Be(6421);
 
         }
         
