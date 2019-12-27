@@ -11,6 +11,11 @@ namespace Tests
         
         [Fact]
         public void Part1_Input_ReturnsCorrectDistance() => Day03.Part1(Wire1, Wire2).Should().Be(529);
+        
+        
+        [Fact]
+        public void Part2_Input_ReturnsCorrectSteps() => Day03.Part2(Wire1, Wire2).Should().Be(20386);
+
 
         [Theory]
         [InlineData("R8,U5,L5,D3", "U7,R6,D4,L4", 6)]
@@ -18,9 +23,16 @@ namespace Tests
         [InlineData("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51", "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7", 135)]
         public void Part1_SampleInput_ReturnsCorrectDistance(string wire1, string wire2, int expectedDistance) =>
             Day03.Part1(wire1, wire2).Should().Be(expectedDistance);
+        
+        [Theory]
+        [InlineData("R8,U5,L5,D3", "U7,R6,D4,L4", 30)]
+        [InlineData("R75,D30,R83,U83,L12,D49,R71,U7,L72", "U62,R66,U55,R34,D71,R55,D58,R83", 610)]
+        [InlineData("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51", "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7", 410)]
+        public void Part2_SampleInput_ReturnsCorrectSteps(string wire1, string wire2, int expectedSteps) =>
+            Day03.Part2(wire1, wire2).Should().Be(expectedSteps);
 
         [Fact]
         public void Coordinates_Wire_ReturnsWireCoordinates() =>
-            Day03.Coordinates("R2,U3,L1,D1").Should().BeEquivalentTo((1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (1, 3), (1, 2));
+            Day03.Coordinates("R2,U3,L1,D1").Should().BeEquivalentTo((1, 0, 1), (2, 0, 2), (2, 1, 3), (2, 2, 4), (2, 3, 5), (1, 3, 6), (1, 2, 7));
     }
 }
