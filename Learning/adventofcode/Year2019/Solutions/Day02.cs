@@ -1,5 +1,5 @@
-﻿using System;
-using static Solutions.IntcodeComputer;
+﻿using Solutions.Shared;
+using static Solutions.Shared.IntcodeComputer;
 
 namespace Solutions
 {
@@ -7,9 +7,7 @@ namespace Solutions
     {
         public static int Part1(string program, int noun = 12, int verb = 2)
         {
-            var input = Parse(program);
-            Span<int> memory = stackalloc int[input.Length];
-            Clone(input, memory);
+            var memory = Parse(program);
             SetNounAndVerb(noun, verb, memory);
             IntcodeComputer.Run(memory);
             return memory[0];
@@ -18,7 +16,7 @@ namespace Solutions
         public static (int noun, int verb) Part2(string program)
         {
             var input = Parse(program);
-            Span<int> memory = stackalloc int[input.Length];
+            var memory = new int[input.Length];
             for (var noun = 0; noun <= 99; noun++)
             {
                 for (var verb = 0; verb <= 99; verb++)

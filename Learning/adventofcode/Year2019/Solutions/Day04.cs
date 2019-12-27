@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Solutions.Shared;
 
 namespace Solutions
 {
@@ -12,14 +13,14 @@ namespace Solutions
 
         public static bool MeetsPart1Criteria(int number)
         {
-            var input = ToArray(number);
+            var input = Utils.ToArray(number);
             var criteria = new Predicate<int[]>[] {HasTwoConsecutiveEqualDigits, NonDecreasing};
             return MeetsCriteria(input, criteria);
         }
         
         public static bool MeetsPart2Criteria(int number)
         {
-            var input = ToArray(number);
+            var input = Utils.ToArray(number);
             var criteria = new Predicate<int[]>[] {HasOnlyTwoConsecutiveEqualDigits, NonDecreasing};
             return MeetsCriteria(input, criteria);
         }
@@ -75,17 +76,6 @@ namespace Solutions
             return true;
         }
             
-        private static int[] ToArray(int x)
-        {
-            var length = (int) Math.Log10(x) + 1;
-            var result = new int[length];
-            for (var i = length - 1; i >=0; i--)
-            {
-                result[i] = x % 10;
-                x /= 10;
-            }
-
-            return result;
-        }
+        
     }
 }
