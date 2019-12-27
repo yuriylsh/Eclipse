@@ -11,6 +11,16 @@ namespace Tests
         [Fact]
         
         public void Part1_Input_ProducesCorrectCode() => Day02.Part1(Input).Should().Be(4090701);
+
+        [Fact]
+        public void Part2_Input_ProducesCorrectCode()
+        {
+            var (noun, verb) = Day02.Part2(Input);
+
+            Day02.Part1(Input, noun, verb).Should().Be(19690720);
+            (100 * noun + verb).Should().Be(11);
+
+        }
         
         [Theory]
         [InlineData("1,0,0,0,99", "2,0,0,0,99")]

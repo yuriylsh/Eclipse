@@ -5,14 +5,30 @@ namespace Solutions
 {
     public static class Day02
     {
-        
-        public static int Part1(string program)
+        public static int Part1(string program, int noun = 12, int verb = 2)
         {
             var input = Parse(program);
-            input[1] = 12;
-            input[2] = 2;
+            input[1] = noun;
+            input[2] = verb;
             Run(input);
             return input[0];
+        }
+        
+        public static (int noun, int verb) Part2(string program)
+        {
+            for (int noun = 0; noun <= 99; noun++)
+            {
+                for (var verb = 0; verb <= 99; verb++)
+                {
+                    var result = Part1(program, noun, verb);
+                    if (result == 19690720)
+                    {
+                        return (noun, verb);
+                    }
+                }
+            }
+
+            return (-1, -1);
         }
         
         public static string Run(string program)
