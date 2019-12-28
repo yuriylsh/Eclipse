@@ -60,12 +60,12 @@ namespace Tests
         [Fact]
         public void Run_ProgramWithInputOpcode_CorrectlyRuns()
         {
-            var program = IntcodeComputer.Parse("03,4,1101,22,33,6,0,99");
+            var program = IntcodeComputer.Parse("03,4,1101,-901,33,6,0");
             var input = new Queue<int>();
             input.Enqueue(1000);
             IntcodeComputer.Run(program, input);
 
-            program.Should().Equal(3,4,1101,22,1000,6,1022,99);
+            program.Should().Equal(3, 4, 1101, -901, 1000, 6, 99);
         }
         
         [Fact]
@@ -76,6 +76,17 @@ namespace Tests
             IntcodeComputer.Run(program);
 
             program.Should().Equal(1101,100,-1,4,99);
+        }
+
+        [Fact]
+        public void Run_ProgramWithOutput_CorrectlyRuns()
+        {
+            var program = IntcodeComputer.Parse("4,789,99");
+            var output = -1;
+            
+            IntcodeComputer.Run(program, output: x => output = x);
+
+            output.Should().Be(789);
         }
     }
 }

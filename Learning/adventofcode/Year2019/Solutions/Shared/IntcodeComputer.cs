@@ -6,9 +6,10 @@ namespace Solutions.Shared
 {
     public class IntcodeComputer
     {
-        public static void Run(int[] program, Queue<int> input = null)
+        public static void Run(int[] program, Queue<int> input = null, Action<int> output = null)
         {
             input ??= EmptyInput;
+            output ??= NoopOutput;
             for (var i = 0; i < program.Length; i++)
             {
                 var (opcode, paramModes) = GetOpcode(program, i);
@@ -26,6 +27,11 @@ namespace Solutions.Shared
                     case InputOpcode:
                         Input(program, parameters, input);
                         break;
+                    case OutputOpcode:
+                        Output(program, parameters, output);
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknown opcode {opcode}");
                 }
             }
         }
@@ -72,6 +78,9 @@ namespace Solutions.Shared
                 case InputOpcode:
                     result.Enqueue(new PositionParameter(index));
                     break;
+                case OutputOpcode:
+                    result.Enqueue(new ImmediateParameter(index));
+                    break;
             }
 
             return result;
@@ -106,10 +115,11 @@ namespace Solutions.Shared
             parameters.Dequeue().Write(program, parameter1.Read(program) * parameter2.Read(program));
         }
         
-        private static void Input(Span<int> program, Queue<IParameter> parameters, Queue<int> input)
-        {
+        private static void Input(Span<int> program, Queue<IParameter> parameters, Queue<int> input) =>
             parameters.Dequeue().Write(program, input.Dequeue());
-        }
+
+        private static void Output(Span<int> program, Queue<IParameter> parameters, Action<int> output) =>
+            output(parameters.Dequeue().Read(program));
 
         public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
 
@@ -132,6 +142,7 @@ namespace Solutions.Shared
         private const int MaxTwoDigitsNumber = 99;
         
         private static readonly Queue<int> EmptyInput = new Queue<int>(0);
+        static void NoopOutput(int _){}
     }
 
 }
