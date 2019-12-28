@@ -64,30 +64,10 @@ namespace Solutions.Shared
             switch (opcode)
             {
                 case AddOpcode:
-                    Span<int> addModes = stackalloc int[3];
-                    modes.AsSpan().CopyTo(addModes);
-                    for (var i = 0; i < addModes.Length; i++)
-                    {
-                        Index paramIndex = index.Value + i;
-                        result.Enqueue(addModes[i] switch
-                        {
-                            0 => new PositionParameter(paramIndex),
-                            _ => new ImmediateParameter(paramIndex)
-                        });
-                    }
+                    TwoReadsOneWriteParameters(index, modes, result);
                     break;
                 case MultiplyOpcode:
-                    Span<int> multiplyModes = stackalloc int[3];
-                    modes.AsSpan().CopyTo(multiplyModes);
-                    for (var i = 0; i < multiplyModes.Length; i++)
-                    {
-                        Index paramIndex = index.Value + i;
-                        result.Enqueue(multiplyModes[i] switch
-                        {
-                            0 => new PositionParameter(paramIndex),
-                            _ => new ImmediateParameter(paramIndex)
-                        });
-                    }
+                    TwoReadsOneWriteParameters(index, modes, result);
                     break;
                 case InputOpcode:
                     result.Enqueue(new PositionParameter(index));
@@ -95,6 +75,21 @@ namespace Solutions.Shared
             }
 
             return result;
+        }
+
+        private static void TwoReadsOneWriteParameters(Index index, int[] modes, Queue<IParameter> parameters)
+        {
+            Span<int> normalizedModes = stackalloc int[3];
+            modes.AsSpan().CopyTo(normalizedModes);
+            for (var i = 0; i < normalizedModes.Length; i++)
+            {
+                Index paramIndex = index.Value + i;
+                parameters.Enqueue(normalizedModes[i] switch
+                {
+                    0 => new PositionParameter(paramIndex),
+                    _ => new ImmediateParameter(paramIndex)
+                });
+            }
         }
 
         private static void Add(Span<int> program, Queue<IParameter> parameters)
