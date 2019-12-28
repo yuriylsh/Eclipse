@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Solutions.Shared;
 using Xunit;
@@ -37,10 +38,7 @@ namespace Tests
 
             var result = IntcodeComputer.GetParameters( 3, Array.Empty<int>(), IntcodeComputer.AddOpcode);
 
-            result.Should().HaveCount(3);
-            result.Dequeue().Read(program).Should().Be(3);
-            result.Dequeue().Read(program).Should().Be(2);
-            result.Dequeue().Read(program).Should().Be(1);
+            result.Select(x => x.Read(program)).Should().Equal(3, 2, 1);
         }
         
         
@@ -51,10 +49,7 @@ namespace Tests
 
             var result = IntcodeComputer.GetParameters( 1, new[]{1}, IntcodeComputer.MultiplyOpcode);
 
-            result.Should().HaveCount(3);
-            result.Dequeue().Read(program).Should().Be(-99);
-            result.Dequeue().Read(program).Should().Be(-1);
-            result.Dequeue().Read(program).Should().Be(0);
+            result.Select(x => x.Read(program)).Should().Equal(-99, -1, 0);
         }
         
         [Fact]

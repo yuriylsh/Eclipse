@@ -64,62 +64,54 @@ namespace Solutions.Shared
             }
         }
         
-        public static Queue<IParameter> GetParameters(Index index, int[] modes, int opcode)
+        public static IReadOnlyList<IParameter> GetParameters(Index index, int[] modes, int opcode)
         {
-            var result = new Queue<IParameter>();
             switch (opcode)
             {
                 case AddOpcode:
-                    TwoReadsOneWriteParameters(index, modes, result);
-                    break;
+                    return TwoReadsOneWriteParameters(index, modes);
                 case MultiplyOpcode:
-                    TwoReadsOneWriteParameters(index, modes, result);
+                    return TwoReadsOneWriteParameters(index, modes);
                     break;
                 case InputOpcode:
-                    result.Enqueue(new PositionParameter(index));
+                    return new IParameter[] { new PositionParameter(index) };
                     break;
                 case OutputOpcode:
-                    result.Enqueue(new ImmediateParameter(index));
+                    return new IParameter[] { new ImmediateParameter(index) };
                     break;
             }
 
-            return result;
+            return Array.Empty<IParameter>();
         }
 
-        private static void TwoReadsOneWriteParameters(Index index, int[] modes, Queue<IParameter> parameters)
+        private static IReadOnlyList<IParameter> TwoReadsOneWriteParameters(Index index, int[] modes)
         {
             Span<int> normalizedModes = stackalloc int[3];
+            var result = new IParameter[3];
             modes.AsSpan().CopyTo(normalizedModes);
             for (var i = 0; i < normalizedModes.Length; i++)
             {
                 Index paramIndex = index.Value + i;
-                parameters.Enqueue(normalizedModes[i] switch
+                result[i] = normalizedModes[i] switch
                 {
                     0 => new PositionParameter(paramIndex),
                     _ => new ImmediateParameter(paramIndex)
-                });
+                };
             }
+            return result;
         }
 
-        private static void Add(Span<int> program, Queue<IParameter> parameters)
-        {
-            var parameter1 = parameters.Dequeue();
-            var parameter2 = parameters.Dequeue();
-            parameters.Dequeue().Write(program, parameter1.Read(program) + parameter2.Read(program));
-        }
-        
-        private static void Multiply(Span<int> program, Queue<IParameter> parameters)
-        {
-            var parameter1 = parameters.Dequeue();
-            var parameter2 = parameters.Dequeue();
-            parameters.Dequeue().Write(program, parameter1.Read(program) * parameter2.Read(program));
-        }
-        
-        private static void Input(Span<int> program, Queue<IParameter> parameters, Queue<int> input) =>
-            parameters.Dequeue().Write(program, input.Dequeue());
+        private static void Add(Span<int> program, IReadOnlyList<IParameter> parameters) => 
+            parameters[2].Write(program, parameters[0].Read(program) + parameters[1].Read(program));
 
-        private static void Output(Span<int> program, Queue<IParameter> parameters, Action<int> output) =>
-            output(parameters.Dequeue().Read(program));
+        private static void Multiply(Span<int> program, IReadOnlyList<IParameter> parameters) =>
+            parameters[2].Write(program, parameters[0].Read(program) * parameters[1].Read(program));
+
+        private static void Input(Span<int> program, IReadOnlyList<IParameter> parameters, Queue<int> input) =>
+            parameters[0].Write(program, input.Dequeue());
+
+        private static void Output(Span<int> program, IReadOnlyList<IParameter> parameters, Action<int> output) =>
+            output(parameters[0].Read(program));
 
         public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
 
