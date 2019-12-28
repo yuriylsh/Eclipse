@@ -50,35 +50,7 @@ namespace Solutions.Shared
                 return result;
             }
         }
-
-        private static void Add(Span<int> program, Queue<Func<int>> parameters)
-        {
-            var parameter1 = parameters.Dequeue()();
-            var parameter2 = parameters.Dequeue()();
-            program[parameters.Dequeue()()] = parameter1 + parameter2;
-        }
         
-        private static void Multiply(Span<int> program, Queue<Func<int>> parameters)
-        {
-            var parameter1 = parameters.Dequeue()();
-            var parameter2 = parameters.Dequeue()();
-            program[parameters.Dequeue()()] = parameter1 * parameter2;
-        }
-
-        public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
-
-        public static void Clone(int[] program, Span<int> target) => program.AsSpan().CopyTo(target);
-
-        public static void SetNounAndVerb(int noun, int verb, Span<int> memory)
-        {
-            memory[1] = noun;
-            memory[2] = verb;
-        }
-
-        private const int HaltOpcode = 99;
-        public const int AddOpcode = 1;
-        public const int MultiplyOpcode = 2;
-        private const int MaxTwoDigitsNumber = 99;
         public static Queue<Func<int>> GetParameters(int[] program, Index index, int[] modes, int opcode)
         {
             var result = new Queue<Func<int>>();
@@ -115,5 +87,41 @@ namespace Solutions.Shared
 
             return result;
         }
+
+        private static void Add(Span<int> program, Queue<Func<int>> parameters)
+        {
+            var parameter1 = parameters.Dequeue()();
+            var parameter2 = parameters.Dequeue()();
+            program[parameters.Dequeue()()] = parameter1 + parameter2;
+        }
+        
+        private static void Multiply(Span<int> program, Queue<Func<int>> parameters)
+        {
+            var parameter1 = parameters.Dequeue()();
+            var parameter2 = parameters.Dequeue()();
+            program[parameters.Dequeue()()] = parameter1 * parameter2;
+        }
+
+        public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
+
+        public static void Clone(int[] program, Span<int> target) => program.AsSpan().CopyTo(target);
+
+        public static void SetNounAndVerb(int noun, int verb, Span<int> memory)
+        {
+            memory[1] = noun;
+            memory[2] = verb;
+        }
+
+        private const int HaltOpcode = 99;
+
+        public const int AddOpcode = 1;
+
+        public const int MultiplyOpcode = 2;
+        
+        public const int InputOpcode = 3;
+
+        public const int OutputOpcode = 4;
+
+        private const int MaxTwoDigitsNumber = 99;
     }
 }
