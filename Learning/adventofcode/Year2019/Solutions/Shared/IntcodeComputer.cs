@@ -6,20 +6,27 @@ namespace Solutions.Shared
 {
     public class IntcodeComputer
     {
-        public static void Run(int[] program)
+        public static void Run(int[] program, Queue<int> input = null)
         {
+            input ??= EmptyInput;
             for (var i = 0; i < program.Length; i++)
             {
                 var (opcode, paramModes) = GetOpcode(program, i);
                 if (opcode == HaltOpcode) break;
-                var parameters = GetParameters(program, i + 1, paramModes, opcode);
+                var parameters = GetParameters(i + 1, paramModes, opcode);
                 i += parameters.Count;
-                if (opcode == AddOpcode)
+                switch (opcode)
                 {
-                    Add(program, parameters);
-                    continue;
+                    case AddOpcode:
+                        Add(program, parameters);
+                        break;
+                    case MultiplyOpcode:
+                        Multiply(program, parameters);
+                        break;
+                    case InputOpcode:
+                        Input(program, parameters, input);
+                        break;
                 }
-                Multiply(program, parameters);
             }
         }
 
@@ -51,60 +58,65 @@ namespace Solutions.Shared
             }
         }
         
-        public static Queue<Func<int>> GetParameters(int[] program, Index index, int[] modes, int opcode)
+        public static Queue<IParameter> GetParameters(Index index, int[] modes, int opcode)
         {
-            var result = new Queue<Func<int>>();
+            var result = new Queue<IParameter>();
             switch (opcode)
             {
                 case AddOpcode:
                     Span<int> addModes = stackalloc int[3];
-                    addModes[^1] = 1;
+                    modes.AsSpan().CopyTo(addModes);
                     for (var i = 0; i < addModes.Length; i++)
                     {
                         Index paramIndex = index.Value + i;
                         result.Enqueue(addModes[i] switch
                         {
-                            0 => () => program[program[paramIndex]],
-                            _ => () => program[paramIndex]
+                            0 => new PositionParameter(paramIndex),
+                            _ => new ImmediateParameter(paramIndex)
                         });
                     }
                     break;
                 case MultiplyOpcode:
                     Span<int> multiplyModes = stackalloc int[3];
-                    multiplyModes[^1] = 1;
                     modes.AsSpan().CopyTo(multiplyModes);
                     for (var i = 0; i < multiplyModes.Length; i++)
                     {
                         Index paramIndex = index.Value + i;
                         result.Enqueue(multiplyModes[i] switch
                         {
-                            0 => () => program[program[paramIndex]],
-                            _ => () => program[paramIndex]
+                            0 => new PositionParameter(paramIndex),
+                            _ => new ImmediateParameter(paramIndex)
                         });
                     }
+                    break;
+                case InputOpcode:
+                    result.Enqueue(new PositionParameter(index));
                     break;
             }
 
             return result;
         }
 
-        private static void Add(Span<int> program, Queue<Func<int>> parameters)
+        private static void Add(Span<int> program, Queue<IParameter> parameters)
         {
-            var parameter1 = parameters.Dequeue()();
-            var parameter2 = parameters.Dequeue()();
-            program[parameters.Dequeue()()] = parameter1 + parameter2;
+            var parameter1 = parameters.Dequeue();
+            var parameter2 = parameters.Dequeue();
+            parameters.Dequeue().Write(program, parameter1.Read(program) + parameter2.Read(program));
         }
         
-        private static void Multiply(Span<int> program, Queue<Func<int>> parameters)
+        private static void Multiply(Span<int> program, Queue<IParameter> parameters)
         {
-            var parameter1 = parameters.Dequeue()();
-            var parameter2 = parameters.Dequeue()();
-            program[parameters.Dequeue()()] = parameter1 * parameter2;
+            var parameter1 = parameters.Dequeue();
+            var parameter2 = parameters.Dequeue();
+            parameters.Dequeue().Write(program, parameter1.Read(program) * parameter2.Read(program));
+        }
+        
+        private static void Input(Span<int> program, Queue<IParameter> parameters, Queue<int> input)
+        {
+            parameters.Dequeue().Write(program, input.Dequeue());
         }
 
         public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
-
-        public static void Clone(int[] program, Span<int> target) => program.AsSpan().CopyTo(target);
 
         public static void SetNounAndVerb(int noun, int verb, Span<int> memory)
         {
@@ -123,5 +135,8 @@ namespace Solutions.Shared
         public const int OutputOpcode = 4;
 
         private const int MaxTwoDigitsNumber = 99;
+        
+        private static readonly Queue<int> EmptyInput = new Queue<int>(0);
     }
+
 }

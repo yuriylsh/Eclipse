@@ -1,4 +1,5 @@
-﻿using Solutions.Shared;
+﻿using System;
+using Solutions.Shared;
 using static Solutions.Shared.IntcodeComputer;
 
 namespace Solutions
@@ -21,7 +22,7 @@ namespace Solutions
             {
                 for (var verb = 0; verb <= 99; verb++)
                 {
-                    Clone(input, memory);
+                    input.AsSpan().CopyTo(memory);
                     SetNounAndVerb(noun, verb, memory);
                     IntcodeComputer.Run(memory);
                     if (memory[0] == 19690720)
