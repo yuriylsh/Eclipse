@@ -66,28 +66,20 @@ namespace Solutions.Shared
         
         public static IReadOnlyList<IParameter> GetParameters(Index index, int[] modes, int opcode)
         {
-            switch (opcode)
+            return opcode switch
             {
-                case AddOpcode:
-                    return TwoReadsOneWriteParameters(index, modes);
-                case MultiplyOpcode:
-                    return TwoReadsOneWriteParameters(index, modes);
-                    break;
-                case InputOpcode:
-                    return new IParameter[] { new PositionParameter(index) };
-                    break;
-                case OutputOpcode:
-                    return new IParameter[] { new ImmediateParameter(index) };
-                    break;
-            }
-
-            return Array.Empty<IParameter>();
+                AddOpcode => GetModeBasedParameters(3, index, modes),
+                MultiplyOpcode => GetModeBasedParameters(3, index, modes),
+                InputOpcode => new IParameter[] {new PositionParameter(index)},
+                OutputOpcode => GetModeBasedParameters(1, index, modes),
+                _ => Array.Empty<IParameter>()
+            };
         }
-
-        private static IReadOnlyList<IParameter> TwoReadsOneWriteParameters(Index index, int[] modes)
+        
+        private static IReadOnlyList<IParameter> GetModeBasedParameters(int count, Index index, int[] modes)
         {
-            Span<int> normalizedModes = stackalloc int[3];
-            var result = new IParameter[3];
+            Span<int> normalizedModes = stackalloc int[count];
+            var result = new IParameter[count];
             modes.AsSpan().CopyTo(normalizedModes);
             for (var i = 0; i < normalizedModes.Length; i++)
             {

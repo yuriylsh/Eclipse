@@ -18,6 +18,17 @@ namespace Solutions
             IntcodeComputer.Run(program, input, output);
 
             return outputs;
+            
+            // 11 : 0
+            // 21 : 224
+            // 43 : 224
+            // 69 : 224
+            // 99 : 224
+            // 121 : 224
+            // 143 : 224
+            // 165 : 224
+            // 199 : 224
+            // 221 : 223
         }
     }
 }
