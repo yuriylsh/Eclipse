@@ -10,12 +10,12 @@ namespace Solutions.Shared
         {
             input ??= EmptyInput;
             output ??= NoopOutput;
-            for (var i = 0; i < program.Length; i++)
+            for (var i = 0; i < program.Length; )
             {
                 var (opcode, paramModes) = GetOpcode(program, i);
                 if (opcode == HaltOpcode) break;
                 var parameters = GetParameters(i + 1, paramModes, opcode);
-                i += parameters.Count;
+                i += parameters.Count + 1;
                 switch (opcode)
                 {
                     case AddOpcode:
@@ -30,11 +30,23 @@ namespace Solutions.Shared
                     case OutputOpcode:
                         Output(program, parameters, output);
                         break;
+                    case JumpIfTrueOpcode:
+                        i = JumpIfTrue(program, parameters) ?? i;
+                        break;
+                    case JumpIfFalseOpcode:
+                        i = JumpIfFalse(program, parameters) ?? i;
+                        break;
                     default:
                         throw new ArgumentException($"Unknown opcode {opcode}");
                 }
             }
         }
+
+        private static int? JumpIfTrue(int[] program, IReadOnlyList<IParameter> parameters) => 
+            parameters[0].Read(program) != 0 ? parameters[1].Read(program) : (int?)null;
+        
+        private static int? JumpIfFalse(int[] program, IReadOnlyList<IParameter> parameters) => 
+            parameters[0].Read(program) == 0 ? parameters[1].Read(program) : (int?)null;
 
         private static readonly Index OpcodeIndex = ^2;
         public static (int opcode, int[] paramMode) GetOpcode(Span<int> program,Index index)
@@ -72,6 +84,8 @@ namespace Solutions.Shared
                 MultiplyOpcode => GetModeBasedParameters(3, index, modes),
                 InputOpcode => new IParameter[] {new PositionParameter(index)},
                 OutputOpcode => GetModeBasedParameters(1, index, modes),
+                JumpIfFalseOpcode => GetModeBasedParameters(2, index, modes),
+                JumpIfTrueOpcode => GetModeBasedParameters(2, index, modes),
                 _ => Array.Empty<IParameter>()
             };
         }
@@ -122,6 +136,14 @@ namespace Solutions.Shared
         public const int InputOpcode = 3;
 
         public const int OutputOpcode = 4;
+
+        public const int JumpIfTrueOpcode = 5;
+
+        public const int JumpIfFalseOpcode = 6;
+        
+        public const int LessThanOpcode = 7; 
+        
+        public const int EqualsOpcode = 8; 
 
         private const int MaxTwoDigitsNumber = 99;
         
