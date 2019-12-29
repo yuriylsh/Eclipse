@@ -76,7 +76,7 @@ namespace Tests
         [Fact]
         public void Run_ProgramWithOutput_CorrectlyRuns()
         {
-            var program = IntcodeComputer.Parse("4,789,99");
+            var program = IntcodeComputer.Parse("104,789,99");
             var output = -1;
             
             IntcodeComputer.Run(program, output: x => output = x);
