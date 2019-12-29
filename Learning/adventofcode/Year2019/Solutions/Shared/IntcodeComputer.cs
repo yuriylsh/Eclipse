@@ -36,17 +36,17 @@ namespace Solutions.Shared
                     case JumpIfFalseOpcode:
                         i = JumpIfFalse(program, parameters) ?? i;
                         break;
+                    case EqualsOpcode:
+                        EqualsHandler(program, parameters);
+                        break; 
+                    case LessThanOpcode:
+                        LessThan(program, parameters);
+                        break;
                     default:
                         throw new ArgumentException($"Unknown opcode {opcode}");
                 }
             }
         }
-
-        private static int? JumpIfTrue(int[] program, IReadOnlyList<IParameter> parameters) => 
-            parameters[0].Read(program) != 0 ? parameters[1].Read(program) : (int?)null;
-        
-        private static int? JumpIfFalse(int[] program, IReadOnlyList<IParameter> parameters) => 
-            parameters[0].Read(program) == 0 ? parameters[1].Read(program) : (int?)null;
 
         private static readonly Index OpcodeIndex = ^2;
         public static (int opcode, int[] paramMode) GetOpcode(Span<int> program,Index index)
@@ -86,6 +86,8 @@ namespace Solutions.Shared
                 OutputOpcode => GetModeBasedParameters(1, index, modes),
                 JumpIfFalseOpcode => GetModeBasedParameters(2, index, modes),
                 JumpIfTrueOpcode => GetModeBasedParameters(2, index, modes),
+                EqualsOpcode => GetModeBasedParameters(3, index, modes),
+                LessThanOpcode => GetModeBasedParameters(3, index, modes),
                 _ => Array.Empty<IParameter>()
             };
         }
@@ -118,6 +120,18 @@ namespace Solutions.Shared
 
         private static void Output(Span<int> program, IReadOnlyList<IParameter> parameters, Action<int> output) =>
             output(parameters[0].Read(program));
+
+        private static int? JumpIfTrue(int[] program, IReadOnlyList<IParameter> parameters) =>
+            parameters[0].Read(program) != 0 ? parameters[1].Read(program) : (int?)null;
+
+        private static int? JumpIfFalse(int[] program, IReadOnlyList<IParameter> parameters) =>
+            parameters[0].Read(program) == 0 ? parameters[1].Read(program) : (int?)null;
+
+        private static void LessThan(int[] program, IReadOnlyList<IParameter> parameters) =>
+            parameters[2].Write(program, parameters[0].Read(program) < parameters[1].Read(program) ? 1 : 0);
+
+        private static void EqualsHandler(int[] program, IReadOnlyList<IParameter> parameters) =>
+            parameters[2].Write(program, parameters[0].Read(program) == parameters[1].Read(program) ? 1 : 0);
 
         public static int[] Parse(string program) => program.Split(',').Select(int.Parse).ToArray();
 
