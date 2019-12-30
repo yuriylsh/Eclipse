@@ -14,7 +14,7 @@ namespace Solutions
             var max = 0;
             int[] maxPhases = null;
             
-            foreach (var phases in GetPhases())
+            foreach (var phases in GetPhases(new[] {0, 1, 2, 3, 4}))
             {
                 initialMemory.AsSpan().CopyTo(memory);
                 var current = Run(memory, phases);
@@ -41,47 +41,23 @@ namespace Solutions
             return runResult;
         }
 
-        private static IEnumerable<int[]> GetPhases()
+        public static IEnumerable<int[]> GetPhases(int[] possibilities)
         {
-            var orders = new[] {new Order(), new Order(), new Order(), new Order(), new Order()};
-            for (var i = 1; i <= 4; i++)
+            if (possibilities.Length == 1)
             {
-                orders[^i].Parent = orders[^(i + 1)];
-            }
-
-            while (true)
+                yield return possibilities;
+                yield break;
+            };
+            foreach (var current in possibilities)
             {
-                orders[4].Increment();
-                var result = orders.Select(GetCurrent).ToArray();
-                yield return result;
-                if(result.Sum() == 5 * 4) yield break;
-            }
-
-            static int GetCurrent(Order x) => x.Current;
-        }
-
-        private class Order
-        {
-            private int _current;
-            private Order _parent;
-
-            public int Current => _current;
-            
-            public void Increment()
-            {
-                if (_current < 4)
+                var other = possibilities.Where(x => x != current).ToArray();
+                foreach (var otherPermutation in GetPhases(other))
                 {
-                    _current += 1;
-                    return;
+                    var currentResult = new int[possibilities.Length];
+                    currentResult[0] = current;
+                    otherPermutation.AsSpan().CopyTo(currentResult.AsSpan(1));
+                    yield return currentResult;
                 }
-
-                _current = 0;
-                _parent?.Increment();
-            }
-
-            public Order Parent
-            {
-                set => _parent = value;
             }
         }
     }
