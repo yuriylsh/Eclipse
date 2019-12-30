@@ -1,19 +1,44 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Solutions.Shared;
 
 namespace Solutions
 {
     public static class Day07
     {
-        public static int Task1(string program)
+        public static (int, int[]) Task1(string program)
         {
+            var initialMemory = IntcodeComputer.Parse(program);
+            var memory = new int[initialMemory.Length];
+            var max = 0;
+            int[] maxPhases = null;
+            
             foreach (var phases in GetPhases())
             {
-                var currentPhase = string.Join(',', phases);
+                initialMemory.AsSpan().CopyTo(memory);
+                var current = Run(memory, phases);
+                if (current > max)
+                {
+                    max = current;
+                    maxPhases = phases;
+                }
             }
 
-            return 33;
+            return (max, maxPhases);
+        }
+
+        public static int Run(int[] memory, int[] phases)
+        {
+            var input = new Queue<int>();
+            var runResult = 0;
+            for (var i = 0; i < 5; i++)
+            {
+                input.Enqueue(phases[i]);
+                input.Enqueue(runResult);
+                IntcodeComputer.Run(memory, input, x => runResult = x);
+            }
+            return runResult;
         }
 
         private static IEnumerable<int[]> GetPhases()
