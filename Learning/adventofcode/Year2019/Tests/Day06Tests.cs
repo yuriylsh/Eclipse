@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Linq;
 using FluentAssertions;
+using Solutions;
 using Solutions.Shared;
 using Xunit;
 
@@ -7,85 +10,94 @@ namespace Tests
 {
     public class Day06Tests
     {
-
-        [Theory]
-        [InlineData(7, 999)]
-        [InlineData(8, 1000)]
-        [InlineData(9, 1001)]
-        public void Run_Sample_CorrectlyRuns(int inputValue, int expectedOutput)
+        [Fact]
+        public void Part1_Input_ReturnsCorrectOrbitsTotal()
         {
-            var program = IntcodeComputer.Parse("3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99");
-            var input = new Queue<int>();
-            input.Enqueue(inputValue);
-            int output = -1;
+            var input = new FileInfo("Inputs/day06_part1_input.txt");
 
-            IntcodeComputer.Run(program, input, output: x => output = x);
+            var result = Day06.Part1(input);
 
-            output.Should().Be(expectedOutput);
-        }
-
-        [Theory]
-        [InlineData(0, 0)]
-        [InlineData(999, 1)]
-        public void Run_JumpIfFalse_CorrectlyRuns(int inputValue, int expectedOutput)
-        {
-            var program = IntcodeComputer.Parse("3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9");
-            var input = new Queue<int>();
-            input.Enqueue(inputValue);
-            int output = -1;
-            
-            IntcodeComputer.Run(program, input,  output: x => output = x);
-
-            output.Should().Be(expectedOutput);
+            result.Should().Be(150150);
         }
         
-        [Theory]
-        [InlineData(0, 0)]
-        [InlineData(999, 1)]
-        public void Run_JumpIfTrue_CorrectlyRuns(int inputValue, int expectedOutput)
+        [Fact]
+        public void Part2_Input_ReturnsCorrectJumps()
         {
-            var program = IntcodeComputer.Parse("3,3,1105,-1,9,1101,0,0,12,4,12,99,1");
-            var input = new Queue<int>();
-            input.Enqueue(inputValue);
-            int output = -1;
-            
-            IntcodeComputer.Run(program, input,  output: x => output = x);
+            var input = new FileInfo("Inputs/day06_part1_input.txt");
 
-            output.Should().Be(expectedOutput);
+            var result = Day06.Part2(input);
+
+            result.Should().Be(352);
+        }
+        
+        [Fact]
+        public void Part2_Sample_ReturnsCorrectJumps()
+        {
+            var input = new FileInfo("Inputs/day06_part1_sample2.txt");
+
+            var result = Day06.Part2(input);
+
+            result.Should().Be(4);
         }
 
-        [Theory]
-        [InlineData("3,9,8,9,10,9,4,9,99,-1,8", 8, 1)]
-        [InlineData("3,9,8,9,10,9,4,9,99,-1,8", 999, 0)]
-        [InlineData("3,3,1108,-1,8,3,4,3,99", 8, 1)]
-        [InlineData("3,3,1108,-1,8,3,4,3,99", 999, 0)]
-        public void Run_EqualTo_CorrectlyRuns(string code, int inputValue, int expectedOutput)
-        {
-            var program = IntcodeComputer.Parse(code);
-            var input = new Queue<int>();
-            input.Enqueue(inputValue);
-            int output = -1;
-            
-            IntcodeComputer.Run(program, input,  output: x => output = x);
 
-            output.Should().Be(expectedOutput);
+        [Fact]
+        public void Part2_Input_ReturnsCorrectNumber()
+        {
+            var input = File.ReadAllLines("Inputs/day06_part1_input.txt");
+            var centerOfMass = Tree.Build(input);
         }
 
-        [Theory]
-        [InlineData("3,9,7,9,10,9,4,9,99,-1,8", 5, 1)]
-        [InlineData("3,9,7,9,10,9,4,9,99,-1,8", 8, 0)]
-        [InlineData("3,3,1107,-1,8,3,4,3,99", 5, 1)]
-        [InlineData("3,3,1107,-1,8,3,4,3,99", 8, 0)]
-        public void Run_LessThan_CorrectlyRuns(string code, int inputValue, int expectedOutput)
-        {
-            var program = IntcodeComputer.Parse(code);
-            var input = new Queue<int>();
-            input.Enqueue(inputValue);
-            int output = -1;
-            
-            IntcodeComputer.Run(program, input,  output: x => output = x);
 
-            output.Should().Be(expectedOutput);
+        [Fact]
+        public void TraverseDepthFirstPreorder_SumDepth_CorrectlyTraverses()
+        {
+            var input = File.ReadAllLines("Inputs/day06_part1_sample.txt");
+            var root = Tree.Build(input);
+            int totlaDepth = 0;
+            
+            Tree.DepthFirstPreorder(root, x => totlaDepth += x.Depth);
+
+            totlaDepth.Should().Be(42);
+        }
+        
+        [Fact]
+        public void TraverseDepthFirstPreorder_CollectLabels_CorrectlyTraverses()
+        {
+            var input = File.ReadAllLines("Inputs/day06_part1_sample.txt");
+            var root = Tree.Build(input);
+            string result = "";
+            
+            Tree.DepthFirstPreorder(root, x => result += x.Label);
+
+            result.Should().Be("COMBCDEFJKLIGH");
+        }
+
+        [Fact]
+        public void BuildTree_Sample_BuildsCorrectTree()
+        {
+            var input = File.ReadAllLines("Inputs/day06_part1_sample.txt");
+
+            var tree = Tree.Build(input);
+
+            tree.Label.Should().Be("COM");
+            tree.Depth.Should().Be(0);
+            tree.Children.Select(x => x.Label).Should().Equal("B");
+            tree.Children.Select(x => x.Depth).Should().Equal(1);
+            tree.Children.First().Children.Select(x => x.Label).Should().Equal("C", "G");
+            tree.Children.First().Children.Select(x => x.Depth).Should().Equal(2, 2);
+        }
+
+        [Fact]
+        public void LowestCommonAncestor_Sample2Dadta_ReturnsCorrectNode()
+        {
+            var input = File.ReadAllLines("Inputs/day06_part1_sample2.txt");
+            var root = Tree.Build(input);
+            Node GetByLabel(string label) => Tree.GetByLabel(root, label);
+
+            var result = Tree.LowestCommonAncestor(GetByLabel("YOU"), GetByLabel("I"));
+
+            result.Label.Should().Be("D");
         }
     }
 }

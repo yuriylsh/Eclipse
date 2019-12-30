@@ -18,17 +18,19 @@ namespace Solutions
             IntcodeComputer.Run(program, input, output);
 
             return outputs;
+        }
+        
+        public static IReadOnlyCollection<int> Part2(FileInfo sourceCode)
+        {   
+            var input = new Queue<int>();
+            input.Enqueue(5);
+            var outputs = new List<int>();
+            Action<int> output = x => outputs.Add(x);
+            var program = IntcodeComputer.Parse(File.ReadAllText(sourceCode.FullName));
             
-            // 11 : 0
-            // 21 : 224
-            // 43 : 224
-            // 69 : 224
-            // 99 : 224
-            // 121 : 224
-            // 143 : 224
-            // 165 : 224
-            // 199 : 224
-            // 221 : 223
+            IntcodeComputer.Run(program, input, output);
+
+            return outputs;
         }
     }
 }
