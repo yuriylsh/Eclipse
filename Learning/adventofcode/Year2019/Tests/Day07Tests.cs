@@ -21,9 +21,9 @@ namespace Tests
         }
 
         [Fact]
-        public void GetPhases_ProducesCorrectPhases()
+        public void GetPhases_ForPart1_ProducesCorrectPhases()
         {
-            var result = Day07.GetPhases().ToArray();
+            var result = Day07.GetPhases(new[] {0, 1, 2, 3, 4}).ToArray();
             result.Should().HaveCount(120);
             result.First().Should().Equal(0, 1, 2, 3, 4);
             result.Last().Should().Equal(4, 3, 2, 1, 0);
