@@ -6,16 +6,23 @@ namespace Solutions.Shared
 {
     public class IntcodeComputer
     {
-        public static void Run(int[] program, Queue<int> input = null, Action<int> output = null)
+        public enum HaltReason
+        {
+            Done,
+            WaitingForInput
+        }
+        
+        public static (HaltReason reason, int pointer) Run(int[] program, int pointer = 0, Queue<int> input = null, Action<int> output = null)
         {
             input ??= EmptyInput;
             output ??= NoopOutput;
-            for (var i = 0; i < program.Length; )
+            while (pointer < program.Length)
             {
-                var (opcode, paramModes) = GetOpcode(program, i);
+                var (opcode, paramModes) = GetOpcode(program, pointer);
                 if (opcode == HaltOpcode) break;
-                var parameters = GetParameters(i + 1, paramModes, opcode);
-                i += parameters.Count + 1;
+                var parameters = GetParameters(pointer + 1, paramModes, opcode);
+                int pointerIncrement = parameters.Count + 1;
+                pointer += pointerIncrement;
                 switch (opcode)
                 {
                     case AddOpcode:
@@ -25,16 +32,21 @@ namespace Solutions.Shared
                         Multiply(program, parameters);
                         break;
                     case InputOpcode:
+                        if (input.Count == 0)
+                        {
+                            pointer -= pointerIncrement;
+                            return (HaltReason.WaitingForInput, pointer);
+                        }
                         Input(program, parameters, input);
                         break;
                     case OutputOpcode:
                         Output(program, parameters, output);
                         break;
                     case JumpIfTrueOpcode:
-                        i = JumpIfTrue(program, parameters) ?? i;
+                        pointer = JumpIfTrue(program, parameters) ?? pointer;
                         break;
                     case JumpIfFalseOpcode:
-                        i = JumpIfFalse(program, parameters) ?? i;
+                        pointer = JumpIfFalse(program, parameters) ?? pointer;
                         break;
                     case EqualsOpcode:
                         EqualsHandler(program, parameters);
@@ -46,6 +58,8 @@ namespace Solutions.Shared
                         throw new ArgumentException($"Unknown opcode {opcode}");
                 }
             }
+
+            return (HaltReason.Done, pointer);
         }
 
         private static readonly Index OpcodeIndex = ^2;
@@ -162,7 +176,6 @@ namespace Solutions.Shared
         private const int MaxTwoDigitsNumber = 99;
         
         private static readonly Queue<int> EmptyInput = new Queue<int>(0);
-        static void NoopOutput(int _){}
+        public static void NoopOutput(int _){}
     }
-
 }

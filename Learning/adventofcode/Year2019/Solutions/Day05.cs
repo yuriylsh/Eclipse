@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Solutions.Shared;
 
@@ -9,28 +8,22 @@ namespace Solutions
     {
         public static IReadOnlyCollection<int> Part1(FileInfo sourceCode)
         {   
-            var input = new Queue<int>();
-            input.Enqueue(1);
-            var outputs = new List<int>();
-            Action<int> output = x => outputs.Add(x);
-            var program = IntcodeComputer.Parse(File.ReadAllText(sourceCode.FullName));
+            var program = new Program(IntcodeComputer.Parse(File.ReadAllText(sourceCode.FullName)));
+            program.Input.Enqueue(1);
             
-            IntcodeComputer.Run(program, input, output);
+            program.Run();
 
-            return outputs;
+            return program.Output;
         }
         
         public static IReadOnlyCollection<int> Part2(FileInfo sourceCode)
         {   
-            var input = new Queue<int>();
-            input.Enqueue(5);
-            var outputs = new List<int>();
-            Action<int> output = x => outputs.Add(x);
-            var program = IntcodeComputer.Parse(File.ReadAllText(sourceCode.FullName));
+            var program = new Program(IntcodeComputer.Parse(File.ReadAllText(sourceCode.FullName)));
+            program.Input.Enqueue(5);
             
-            IntcodeComputer.Run(program, input, output);
+            program.Run();
 
-            return outputs;
+            return program.Output;
         }
     }
 }

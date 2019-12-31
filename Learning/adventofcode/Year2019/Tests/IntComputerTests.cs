@@ -55,12 +55,12 @@ namespace Tests
         [Fact]
         public void Run_ProgramWithInputOpcode_CorrectlyRuns()
         {
-            var program = IntcodeComputer.Parse("03,4,1101,-901,33,6,0");
-            var input = new Queue<int>();
-            input.Enqueue(1000);
-            IntcodeComputer.Run(program, input);
+            var program = new Program(IntcodeComputer.Parse("03,4,1101,-901,33,6,0"));
+            
+            program.Input.Enqueue(1000);
+            program.Run();
 
-            program.Should().Equal(3, 4, 1101, -901, 1000, 6, 99);
+            program.Code.Should().Equal(3, 4, 1101, -901, 1000, 6, 99);
         }
         
         [Fact]
