@@ -17,9 +17,9 @@ namespace Tests
 
             var result = Day08.Part1(input);
             
-            result.Should().Be(-1);
+            result.Should().Be(1690);
         }
-        
+
         [Fact]
         public void Canvas_SampleData_LoadsCorrectly()
         {

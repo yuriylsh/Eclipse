@@ -16,7 +16,11 @@ namespace Solutions
             var result = 0;
             foreach (var (zeros, ones, twos) in canvas.Layers.Select(ToDigitCounts))
             {
-                if (zeros < minZeros) result = ones + twos;
+                if (zeros < minZeros)
+                {
+                    minZeros = zeros;
+                    result = ones * twos;
+                }
             }
 
             return result;

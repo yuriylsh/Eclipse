@@ -1,5 +1,4 @@
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO;
 
@@ -22,14 +21,13 @@ namespace Solutions.Shared
         {
             var result = new Canvas(width, height);
             var layerSize = width * height;
-            Span<byte> layerBuffer = stackalloc byte[layerSize];
-
-            while(true)
+            using var reader = new StreamReader(input);
+            var digitChars = reader.ReadLine().AsSpan();
+            var position = 0;
+            while(position < digitChars.Length)
             {
-                var bytesRead = input.Read(layerBuffer);
-                if (bytesRead == 0) break;
-                if(bytesRead != layerSize) throw new ArgumentException($"Provided input size is not multiple of the layers size. Layer size is {layerSize} but read {bytesRead} only.");
-                result._layers.Add(Layer.Load(layerBuffer, width, height));
+                result._layers.Add(Layer.Load(digitChars.Slice(position, layerSize), width, height));
+                position += layerSize;
             }
             
             return result;
@@ -54,10 +52,13 @@ namespace Solutions.Shared
             RowsCount = rowsCount;
         }
 
-        public static Layer Load(in ReadOnlySpan<byte> input, int width, int height)
+        public static Layer Load(in ReadOnlySpan<char> input, int width, int height)
         {
             var result = new Layer(new byte[input.Length], width, height);
-            input.CopyTo(result._data);
+            for (var i = 0; i < input.Length; i++)
+            {
+                result._data[i] = byte.Parse(input.Slice(i, 1));
+            }
             return result;
         }
 
@@ -65,9 +66,8 @@ namespace Solutions.Shared
         {
             if (rowIndex < 0 || rowIndex >= RowsCount) throw new ArgumentException($"{nameof(rowIndex)} should be [0..{RowsCount}) but was {rowIndex}") ;
             var rowOffset = rowIndex * _columnsCount;
-            for (int i = 0; i < _columnsCount; i++)
+            for (var i = 0; i < _columnsCount; i++)
             {
-
                 yield return _data[rowOffset + i];
             }
         }
