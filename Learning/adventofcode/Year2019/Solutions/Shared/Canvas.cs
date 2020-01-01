@@ -1,8 +1,7 @@
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Pipelines;
-using System.Threading.Tasks;
 
 namespace Solutions.Shared
 {
@@ -19,34 +18,58 @@ namespace Solutions.Shared
             _layers = new List<Layer>();
         }
 
-        public static async Task<Canvas> Load(Stream input, int width, int height)
+        public static Canvas Load(Stream input, int width, int height)
         {
             var result = new Canvas(width, height);
             var layerSize = width * height;
-            var pipeline = PipeReader.Create(input, new StreamPipeReaderOptions(minimumReadSize: layerSize, bufferSize: layerSize));
-            while (true)
+            Span<byte> layerBuffer = stackalloc byte[layerSize];
+
+            while(true)
             {
-                var readResult = await pipeline.ReadAsync();
-                var buffer = readResult.Buffer;
-
-                foreach (var layerMemory in buffer)
-                {
-                    result._layers.Add(Layer.Load(layerMemory));
-                }
-
-                if (readResult.IsCompleted) break;
+                var bytesRead = input.Read(layerBuffer);
+                if (bytesRead == 0) break;
+                if(bytesRead != layerSize) throw new ArgumentException($"Provided input size is not multiple of the layers size. Layer size is {layerSize} but read {bytesRead} only.");
+                result._layers.Add(Layer.Load(layerBuffer, width, height));
             }
+            
             return result;
         }
 
-        public IReadOnlyCollection<Layer> Layers => _layers;
+        public IReadOnlyList<Layer> Layers => _layers;
     }
 
     public class Layer
     {
-        public static Layer Load(in ReadOnlyMemory<byte> input)
+        private readonly byte[] _data;
+        private readonly int _columnsCount;
+
+        public int RowsCount { get; }
+
+        public IReadOnlyList<byte> AllPixels => _data;
+
+        private Layer(byte[] data, int columnsCount, int rowsCount)
         {
-            return new Layer();
+            _data = data;
+            _columnsCount = columnsCount;
+            RowsCount = rowsCount;
+        }
+
+        public static Layer Load(in ReadOnlySpan<byte> input, int width, int height)
+        {
+            var result = new Layer(new byte[input.Length], width, height);
+            input.CopyTo(result._data);
+            return result;
+        }
+
+        public IEnumerable<byte> GetRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= RowsCount) throw new ArgumentException($"{nameof(rowIndex)} should be [0..{RowsCount}) but was {rowIndex}") ;
+            var rowOffset = rowIndex * _columnsCount;
+            for (int i = 0; i < _columnsCount; i++)
+            {
+
+                yield return _data[rowOffset + i];
+            }
         }
     } 
 }
