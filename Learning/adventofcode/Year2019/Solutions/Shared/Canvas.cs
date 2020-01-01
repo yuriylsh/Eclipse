@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace Solutions.Shared
 {
@@ -32,8 +34,42 @@ namespace Solutions.Shared
             
             return result;
         }
+        
+        
 
         public IReadOnlyList<Layer> Layers => _layers;
+
+        public Layer GetVisibleLayer()
+        {
+            var layerSize = _width * _height;
+            var data = new byte[layerSize];
+            for (var i = 0; i < layerSize; i++)
+            {
+                data[i] = _layers.FirstOrDefault(x => x.AllPixels[i] != 2)?.AllPixels[i] ?? 2;
+            }
+            return new Layer(data, _width, _height);
+        }
+
+        public void SaveAsBitmap(string path)
+        {
+            var visibleLayer = GetVisibleLayer();
+            var result = new Bitmap(_width, _height);
+            for (int y = 0; y < _height; y++)
+            {
+                for (var x = 0; x < _width; x++)
+                {
+                    var pixel = visibleLayer.AllPixels[_width * y + x];
+                    result.SetPixel(x, y, pixel switch
+                    {
+                        0 => Color.Black,
+                        1 => Color.White,
+                        2 => Color.Transparent,
+                        _ => Color.Red
+                    });
+                }
+            }
+            result.Save(path);
+        }
     }
 
     public class Layer
@@ -45,7 +81,7 @@ namespace Solutions.Shared
 
         public IReadOnlyList<byte> AllPixels => _data;
 
-        private Layer(byte[] data, int columnsCount, int rowsCount)
+        public Layer(byte[] data, int columnsCount, int rowsCount)
         {
             _data = data;
             _columnsCount = columnsCount;

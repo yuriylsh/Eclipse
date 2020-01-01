@@ -20,6 +20,26 @@ namespace Tests
             result.Should().Be(1690);
         }
 
+        [Fact(Skip = "generating a decode image")]
+        public void Part2_GeneratesImate()
+        {
+            var inputFile = new FileInfo("Inputs/day08_part1_input.txt");
+            using var input = inputFile.OpenRead();
+            Canvas.Load(input, 25, 6).SaveAsBitmap("day08_part2_input.bmp");
+        }
+
+        [Fact]
+        public void ToImage_SampleData_ReturnsCorrectColors()
+        {
+            var inputFile = new FileInfo("Inputs/day08_part2_sample.txt");
+            using var input = inputFile.OpenRead();
+            var canvas = Canvas.Load(input, 2, 2);
+
+            var layer = canvas.GetVisibleLayer();
+
+            layer.AllPixels.Should().Equal(0, 1, 1, 0);
+        }
+        
         [Fact]
         public void Canvas_SampleData_LoadsCorrectly()
         {
