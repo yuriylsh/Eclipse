@@ -66,7 +66,7 @@ namespace Solutions
         public static int CountContainingColors(string color, IEnumerable<string> input)
         {
             var colors = new Dictionary<string, HashSet<NestedColor>>(input.Select(ParseWithNumbers));
-            return CountColors(color, colors);
+            return CountColorsImperative(color, colors);
         }
 
         private static KeyValuePair<string, HashSet<string>> Parse(string input)
@@ -105,6 +105,28 @@ namespace Solutions
                     ? total
                     : total += nested.Sum(nestedColor => target.Count * CountColorsRecursive(nestedColor));
             }
+        }
+        
+        private static int CountColorsImperative(string color, Dictionary<string, HashSet<NestedColor>> colors)
+        {
+            var total = 0;
+            Stack<NestedColor> work = new();
+            work.Push(new NestedColor(color, 1));
+            while (work.Count > 0)
+            {
+                var target = work.Pop();
+                total += target.Count;
+                var nested = colors[target.Name];
+                if (nested.Count > 0)
+                {
+                    foreach (var nestedColor in nested)
+                    {
+                        work.Push( nestedColor with {Count = nestedColor.Count * target.Count});
+                    }
+                }
+            }
+
+            return total - 1;
         }
     }
     
