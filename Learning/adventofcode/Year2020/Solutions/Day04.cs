@@ -82,23 +82,16 @@ namespace Solutions
     {
         public static IEnumerable<PassportData> ParsePassportData(IEnumerable<string> input)
         {
-            var currentPassport = new PassportData();
-            foreach (var line in input)
+            foreach (var group in Utils.GetGrouppedLines(input))
             {
-                if (string.IsNullOrEmpty(line))
+                var passport = new PassportData();
+                foreach (var line in group)
                 {
-                    yield return currentPassport;
-                    currentPassport = new PassportData();
+                    AppendData(passport, line);
                 }
-                else
-                {
-                    AppendData(currentPassport, line);
-                }
-            }
 
-            // assuming the input does not have an empty line at the end
-            // otherwise this would be an extra empty passport instance
-            yield return currentPassport;
+                yield return passport;
+            }
         }
 
         private static void AppendData(PassportData currentPassport, string line)
