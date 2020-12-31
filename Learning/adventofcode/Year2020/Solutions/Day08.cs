@@ -38,8 +38,7 @@ namespace Solutions
             Day08Solution.ExecutePart2(input, accumulator);
             accumulator.Value.Should().Be(8);
         }
-        
-        
+
         [Fact]
         public void Part2_Input()
         {
@@ -58,15 +57,15 @@ namespace Solutions
         
         private static ExecutionResult Run(Operation[] program, Accumulator accumulator)
         {
-            var executionLog = new bool[program.Length];
+            var executionLog = new HashSet<int>();
             var pointer = 0;
             while (true)
             {
                 if (pointer == program.Length) return ExecutionResult.ImmediatelyAfterLastInstruction;
                 if (pointer > program.Length) return ExecutionResult.Other;
                 var current = program[pointer];
-                if (executionLog[pointer]) return ExecutionResult.ReachedLoop;
-                executionLog[pointer] = true;
+                if (executionLog.Contains(pointer)) return ExecutionResult.ReachedLoop;
+                executionLog.Add(pointer);
                 var newPointerLocation = OperationHandlers[current.Name](current, pointer, accumulator);
                 pointer = newPointerLocation;
             }
