@@ -52,7 +52,7 @@ namespace Solutions
             var schedule = "37,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,41,x,x,x,x,x,x,x,x,x,601,x,x,x,x,x,x,x,x,x,x,x,19,x,x,x,x,17,x,x,x,x,x,23,x,x,x,x,x,29,x,443,x,x,x,x,x,x,x,x,x,x,x,x,13";
 
             var timestamp = Day13Solution.GetTimestamp(schedule);
-            timestamp.Should().Be(1L);
+            timestamp.Should().Be(379786358533423L);
         }
     }
 
@@ -79,30 +79,34 @@ namespace Solutions
         public static long GetTimestamp(string schedule)
         {
             var busses = GetBusses(schedule);
-            var max = GetMaxBus(busses);
+            var N = busses.Aggregate(1L, (acc, x) => acc * x.number);
 
-            var coef = 1L;
-            var timestamp = 0L;
-            while (true)
+            var data = busses.Select(GetChineseRemainderTheoremData).ToArray();
+            var sum = data.Select(x => x.remainder * x.inverse * x.Ni).Sum();
+            return sum % N;
+
+            (int remainder, long Ni, int inverse) GetChineseRemainderTheoremData((int number, int offset) bus)
             {
-                timestamp = GetTimestamp(max, coef);
-                if (busses.All(x => (timestamp + x.offset) % x.number == 0)) return timestamp;
-                coef += 1;
+                var Ni = N / bus.number;
+                return (bus.number - bus.offset, Ni, GetInverse(Ni, bus.number));
             }
 
-            static long GetTimestamp((int number, int offset) bus, long coef) => bus.number * coef - bus.offset;
-
-            static (int number, int offset) GetMaxBus(List<(int number, int offset)> busses)
+            static int GetInverse(long Ni, int modulo)
             {
-                (int number, int offset) max = (-1, -1);
-                foreach (var item in busses)
+                var multiple = Ni % modulo;
+                var inverse = 1;
+                while (true)
                 {
-                    if (item.number > max.number) max = item;
+                    if (inverse * multiple % modulo == 1) return inverse;
+                    inverse += 1;
                 }
-
-                return max;
             }
+
+            return 0;
+            
         }
+        
+        
 
         private static List<(int number, int offset)> GetBusses(string schedule)
         {
